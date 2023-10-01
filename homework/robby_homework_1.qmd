@@ -1,0 +1,208 @@
+---
+title: "Robby - Homework 1"
+format: pdf
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#|echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+# Point Process Homework (Basics)
+
+## Problem 1
+
+What are the two components needed to define a spatial point process?
+
+> 1.  Event Locations (where and event did occur)
+> 2.  Event Space (where an event could occur)
+
+## Problem 2
+
+What are the main components that define a homogeneous Poisson point process?
+
+> 1.  Stationarity and a constant intensity parameter Lambda
+> 2.  Complete Spatial Randomness (events are uniformly distributed over the study region)
+
+## Problem 3
+
+What is the main difference between a homogeneous and heterogeneous point process (pp)?
+
+> The main difference between the two point processes is that the intensity of events within the study region is constant for the homogeneous pp and not constant for the heterogeneous pp.
+
+## Problem 4
+
+Describe the differences between a regular, clustered, and homogeneous (CSR) Poisson pp?
+
+> One can think of the relationship (and the difference between these point patterns) as a spectrum ranging from a regular distribution of points wherein no clustering is observed, moving to CSR in which each event location is uniformly distributed and independent of each other event location, and finally on the other end of the spectrum is clustering, in which event locations are grouped up more than would be random.
+
+## Problem 5
+
+For this problem, I was able to create a plot for each realization using code from Dr. French's github repo.
+
+### Regular Point Process
+
+```{r}
+library(splancs)
+library(spatial)
+
+# Regular PP Set Up
+set.seed(1) # for reproducability
+ppregion(xl = 0, xu = 1, yl = 0, yu = 1)
+
+# Simulate 30 events from a Strauss process with probability c of other events
+# within distance r of other events.
+test <- Strauss(30, c = 0, r = 0.05)
+plot(test, xlim = 0:1, ylim = 0:1, xlab = "u", ylab = "v", cex.lab = 1.5, cex.axis = 1.1)
+title("Regular")
+
+
+```
+
+### Clustered Point Process
+
+```{r}
+
+# domain is unit square
+domain = cbind(c(0,0,1,1), c(0,1,1,0))
+
+
+test <- pcp.sim(rho = 5, m = 15, s2 = 0.01, region.poly = domain)
+plot(test, xlim = 0:1, ylim = 0:1, xlab = "u", ylab = "v", 
+     cex.lab = 1.5, cex.axis = 1.1)
+title("Clustered")
+
+```
+
+### CSR Poisson Point Process
+
+```{r}
+library(spatstat)
+
+poi <- rpoispp(50)
+plot(poi,xlim = 0:1, ylim = 0:1, xlab = "u", ylab = "v", 
+     cex.lab = 1.5, cex.axis = 1.1)
+title("CSR Poisson Point Process")
+```
+
+## Problem 6
+
+```{r}
+
+library(spatstat)
+h1 <- rpoispp(50)
+plot(h1)
+```
+
+> The h1 plot shows a seemingly random realization of 50 points. While there is little evidence of overlapping event locations, we can see at least one such pair of events which means this is not a regular plot, and not indicative of clustering. Therefore, it seems the h1 plot could be bompatible with CSR.
+
+## Problem 7
+
+```{r}
+
+rcsr <- function(lambda){
+  region = cbind(c(1,0,0,1), c(1,1,0,0))
+  N = lambda
+  points = csr(region,N)
+  wreg = owin(poly = region)
+  pp_1 = ppp(x=points[,1],y=points[,2],window = wreg)
+  return(pp_1)
+}
+
+
+```
+
+```{r}
+lambda = 50
+h2 <- rcsr(lambda)
+plot(h2)
+```
+
+## Problem 8
+
+> 1.  Draw a single data set from the rpoispp function. Use the density function to estimate the intensity function for the simulated data set. Compute the difference between the maximum and minimum estimated intensity values.
+
+```{r}
+dim = 2
+df = rpoispp(50)
+bx = sd(df$x)*length(df$x)^(-1/(dim+4))
+by = sd(df$y)*length(df$y)^(-1/(dim+4))
+
+ix = density(df,sigma = c(bx,by))
+
+ix_min = min(ix$v)
+ix_max = max(ix$v)
+ix_diff = ix_max - ix_min
+print(ix_diff)
+```
+
+> 2.  Draw a simulated data set from the 'rcsr' function assuming lambda = 50. Use the density function to estimate the intensity function of the simulated data set, and compute the diff between max and min intensity values.
+
+```{r}
+dim = 2
+lambda = 50
+df = rcsr(50)
+bx = sd(df$x)*length(df$x)^(-1/(dim+4))
+by = sd(df$y)*length(df$y)^(-1/(dim+4))
+
+ix = density(df,sigma = c(bx,by))
+
+ix_min = min(ix$v)
+ix_max = max(ix$v)
+ix_diff = ix_max - ix_min
+print(ix_diff)
+```
+
+> 3.  Repeat previous test 999 times
+
+```{r}
+dim = 2
+lambda = 50
+result = data.frame()
+for (i in 1:999) {
+  df = rcsr(50)
+  bx = sd(df$x)*length(df$x)^(-1/(dim+4))
+  by = sd(df$y)*length(df$y)^(-1/(dim+4))
+  
+  ix = density(df,sigma = c(bx,by))
+  
+  ix_min = min(ix$v)
+  ix_max = max(ix$v)
+  ix_mean = mean(ix$v)
+  ix_diff = ix_max - ix_min
+  result[i,1] = ix_mean
+}
+
+print(result)
+```
+
+```{r}
+nsim = 999
+lambda = 50
+N = 1
+poisd = rpois(nsim,lambda)
+simdata = matrix(poisd,nrow=nsim,ncol=N)
+
+Tsim = rowMeans(simdata)/(sd(simdata)/sqrt(N))  # apply(simdata,1,sd) returns all NA
+
+
+
+
+```
