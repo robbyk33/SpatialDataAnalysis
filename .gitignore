@@ -2,3 +2,11 @@
 .Rhistory
 .RData
 .Ruserdata
+<<<<<<< HEAD
+=======
+.rda
+kdenv.rda
+renv350.rda
+renv700.rda
+*.rda
+>>>>>>> 3130ef33c61d44190e4097be0965c189f04c6c55
