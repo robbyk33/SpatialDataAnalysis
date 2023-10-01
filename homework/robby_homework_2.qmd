@@ -1,0 +1,237 @@
+---
+title: "Robby - Homework 2"
+format: pdf
+editor: visual
+---
+
+# Point Process Homework 2
+
+## Problem 1
+
+### Part a.
+
+```{r}
+library(spatstat)
+numata_pines <- spatstat.data::japanesepines
+plot(numata_pines$x,numata_pines$y,xlab='U',ylab='V',main='Japanese Black Pine Sapling Locations')
+```
+
+```{r}
+
+lplot <- function(x, nsim = 500, level = 0.95,
+                  correction = "Ripley", test=FALSE, ...) {
+  lobs <- spatstat.explore::Lest(x, correction = correction, ...)
+
+
+  win <- x$window
+  lsim <- pbapply::pblapply(1:nsim, FUN = function(i) {
+
+    xsim <- spatstat.random::rpoispp(lambda = x$n, win = win)
+    spatstat.explore::Lest(xsim, correction = correction, ...)
+  })
+
+  r <- lobs$r # get distances
+  obs <- lobs$iso # get estimated l for observed
+  # get estimated l for each simulated data set
+  sim <- sapply(lsim, getElement, "iso")
+  # apply the min function to each row  (MARGIN = 1) of sim
+  # gets pointwise minimum for simulated data
+  # at each distance.  do same for max, quantiles, median
+  lo <- apply(sim, MARGIN = 1, FUN = min, na.rm = TRUE)
+  hi <- apply(sim, MARGIN = 1, FUN = max, na.rm = TRUE)
+  alpha <- 1 - level
+  qlo <- apply(sim, MARGIN = 1, FUN = quantile,
+               prob = alpha/2, na.rm = TRUE)
+  qhi <- apply(sim, MARGIN = 1, FUN = quantile,
+               prob = 1 - alpha/2, na.rm = TRUE)
+  med <- apply(sim, MARGIN = 1, FUN = median, na.rm = TRUE)
+  # construct empty plot of the right size
+  plot(range(r), c(min(c(lo, obs) - r, na.rm = TRUE),
+                   max(c(hi, obs) - r, na.rm = TRUE)),
+       type = "n",
+       xlab = "distance", ylab = "L(r) - r")
+  # plot different statistics with different styles/thickness
+  lines(r, obs - r, lwd = 2)
+  lines(r, lo - r, lty = 2)
+  lines(r, hi - r, lty = 2)
+  lines(r, qlo - r, lty = 1)
+  lines(r, qhi - r, lty = 1)
+  
+}
+
+```
+
+```{r}
+library(pbapply)
+
+lplot(x=numata_pines)
+
+```
+
+### Part b.
+
+> Based on the plot from part a, the Japanese Pines data appears consistent with CSR across all spatial scales and no indication of regularity or clustering.
+
+### Part c.
+
+```{r}
+
+win = numata_pines$window
+lambda = numata_pines$n
+
+
+lobserved <- spatstat.explore::Lest(X=numata_pines, correction = "Ripley")
+lr = lobserved$iso
+r = lobserved$r
+tobs = max(abs(lr-r))
+
+lrl <- pbapply::pbsapply(1:499, FUN = function(i) {
+  xs <- spatstat.random::rpoispp(lambda = lambda, win = win)
+  max(abs(spatstat.explore::Lest(xs,correction = "Ripley")$iso-r))
+  
+})
+
+mean(c(tobs,lrl)>=tobs)
+
+```
+
+> The Monte Carlo p-value suggests that the Numata Pines data is consistent with CSR since we fail to reject the null that our observed test statistic and the simulated test statistic come from the same distribution, and since the simulated distribution is consistent with CSR by design.
+
+## Problem 2
+
+### Part a.
+
+```{r}
+
+redwood <- spatstat.data::redwood
+plot(redwood$x,redwood$y,xlab='U',ylab='V',main='California Redwood Seedling/Sapling Locations')
+```
+
+> At first glance, the distribution of seedling/sapling locations does not appear to be consistent with CSR and we see some potential clustering.
+
+### Part b.
+
+```{r}
+
+dim = 2
+bx = sd(redwood$x)*length(redwood$x)^(-1/(dim+4))
+by = sd(redwood$y)*length(redwood$y)^(-1/(dim+4))
+
+ix = density(redwood,sigma = c(bx,by))
+contour(ix$v,main='California Redwood Seedling/Sapling Contours')
+```
+
+> Since the contours show areas of greater or lower intensity relative to the rest of the study area, we would not think the underlying data to be consistent with CSR.
+
+### Part c.
+
+```{r}
+
+lplot(redwood)
+```
+
+### Part d.
+
+> From the L(r) - r plot above we can see that there is evidence of clustering beyond what we would expect for a point process compatible with CSR for certain spatial scales up to about r=0.22.
+
+### Part e.
+
+```{r}
+win = redwood$window
+lambda = redwood$n
+
+
+lobserved <- spatstat.explore::Lest(X=redwood, correction = "Ripley")
+lr = lobserved$iso
+r = lobserved$r
+tobs = max(abs(lr-r))
+
+lrl <- pbapply::pbsapply(1:499, FUN = function(i) {
+  xs <- spatstat.random::rpoispp(lambda = lambda, win = win)
+  max(abs(spatstat.explore::Lest(xs,correction = "Ripley")$iso-r))
+  
+})
+
+mean(c(tobs,lrl)>=tobs)
+```
+
+> From the Monte-Carlo p-value calculated above we reject the null that the observed statistic is from a distribution compatible with CSR.
+
+### Part f.
+
+> Overall, there appears to be enough evidence to support the conclusion that the Redwood sapling locations are not compatible with CSR and there is more clustering than would be expected from a CSR point process.
+
+## Problem 3
+
+```{r}
+set.seed(1)
+x <- runif(15)
+
+h <- seq(-1,2,len = 1000)
+```
+
+### Part a.
+
+> evaluate the Gaussian kernel function (dnorm) at each value of h using the event location as the mean argument and a sd argument of 0.10
+
+```{r}
+library(ggplot2)
+
+kvals <- data.frame()
+for (i in 1:1000){
+  j = 0
+  for (xi in x){
+    j = j+1
+    kg = dnorm(xi,mean = h[i], sd=0.10)
+    kvals[i,j] = kg
+  }
+
+}
+
+str(kvals)
+kval_totals <- pbapply(kvals,MARGIN=1,FUN='sum')
+
+
+plot(h,kval_totals,type="l")
+
+for (j in 1:(length(kvals))) (
+
+    lines(h,kvals[,j],add=TRUE)
+  )
+
+
+
+```
+
+Part b.
+
+> Repeat using sd/bandwidth of 0.25
+
+```{r}
+
+kvals <- data.frame()
+for (i in 1:1000){
+  j = 0
+  for (xi in x){
+    j = j+1
+    kg = dnorm(xi,mean = h[i], sd=.25)
+    kvals[i,j] = kg
+  }
+
+}
+
+str(kvals)
+
+kval_totals <- pbapply(kvals,MARGIN=1,FUN='sum')
+
+plot(h,kval_totals,type="l")
+
+for (j in 1:(length(kvals))) (
+
+    lines(h,kvals[,j],add=TRUE)
+  )
+```
+
+Part c.
+
+> The relationship between the bandwidth and the smoothness of the density function is that a larger bandwidth gives a smoother density function.

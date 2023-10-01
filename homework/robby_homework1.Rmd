@@ -4,6 +4,14 @@ format: pdf
 editor: visual
 ---
 
+```{r}
+
+library(spatstat)
+library(splancs)
+library(spatial)
+
+```
+
 # Point Process Homework (Basics)
 
 ## Problem 1
@@ -39,8 +47,8 @@ For this problem, I was able to create a plot for each realization using code fr
 ### Regular Point Process
 
 ```{r}
-library(splancs)
-library(spatial)
+#| echo: false
+
 
 # Regular PP Set Up
 set.seed(1) # for reproducability
@@ -83,7 +91,6 @@ plot(poi$x,poi$y,xlab = "u", ylab = "v", main="Homogenous Poisson Point Process"
 
 ```{r}
 
-library(spatstat)
 h1 <- rpoispp(50)
 
 plot(h1$x,h1$y, xlab = "u", ylab = "v",main="Poisson Point Process")
@@ -92,7 +99,7 @@ print("Total Points Generated: ")
 print(point_count)
 ```
 
-> The h1 plot shows a seemingly random realization of 48 points. While there is little evidence of overlapping event locations, we can see at least one such pair of events which means this is not a regular plot, and not indicative of clustering. Therefore, it seems the h1 plot could be compatible with CSR.
+> The h1 plot shows a seemingly random realization of 63 points. While there is little evidence of overlapping event locations, we can see at least one such pair of events which means this is not a regular plot, and not indicative of clustering. Therefore, it seems the h1 plot could be compatible with CSR.
 
 ## Problem 7
 
@@ -206,7 +213,7 @@ t.test(result,mu=ix_mean_compare)
 ## Problem 9
 
 ```{r}
-library(spatstat)
+
 numata_pines <- spatstat.data::japanesepines
 plot(numata_pines$x,numata_pines$y,xlab='U',ylab='V',main='Japanese Black Pine Sapling Locations')
 

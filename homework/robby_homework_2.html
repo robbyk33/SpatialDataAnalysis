@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Robby - Homework 2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="robby_homework_2_files/libs/clipboard/clipboard.min.js"></script>
+<script src="robby_homework_2_files/libs/quarto-html/quarto.js"></script>
+<script src="robby_homework_2_files/libs/quarto-html/popper.min.js"></script>
+<script src="robby_homework_2_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="robby_homework_2_files/libs/quarto-html/anchor.min.js"></script>
+<link href="robby_homework_2_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="robby_homework_2_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="robby_homework_2_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="robby_homework_2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="robby_homework_2_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Robby - Homework 2</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="point-process-homework-2" class="level1">
+<h1>Point Process Homework 2</h1>
+<section id="problem-1" class="level2">
+<h2 class="anchored" data-anchor-id="problem-1">Problem 1</h2>
+<section id="part-a." class="level3">
+<h3 class="anchored" data-anchor-id="part-a.">Part a.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatstat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.data</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.geom</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>spatstat.geom 3.2-5</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.random</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>spatstat.random 3.1-6</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.explore</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: nlme</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>spatstat.explore 3.2-3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.model</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: rpart</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>spatstat.model 3.2-6</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.linnet</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>spatstat.linnet 3.1-1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+spatstat 3.0-6 
+For an introduction to spatstat, type 'beginner' </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>numata_pines <span class="ot">&lt;-</span> spatstat.data<span class="sc">::</span>japanesepines</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(numata_pines<span class="sc">$</span>x,numata_pines<span class="sc">$</span>y,<span class="at">xlab=</span><span class="st">'U'</span>,<span class="at">ylab=</span><span class="st">'V'</span>,<span class="at">main=</span><span class="st">'Japanese Black Pine Sapling Locations'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="robby_homework_2_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>lplot <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">nsim =</span> <span class="dv">500</span>, <span class="at">level =</span> <span class="fl">0.95</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">correction =</span> <span class="st">"Ripley"</span>, <span class="at">test=</span><span class="cn">FALSE</span>, ...) {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  lobs <span class="ot">&lt;-</span> spatstat.explore<span class="sc">::</span><span class="fu">Lest</span>(x, <span class="at">correction =</span> correction, ...)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  win <span class="ot">&lt;-</span> x<span class="sc">$</span>window</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  lsim <span class="ot">&lt;-</span> pbapply<span class="sc">::</span><span class="fu">pblapply</span>(<span class="dv">1</span><span class="sc">:</span>nsim, <span class="at">FUN =</span> <span class="cf">function</span>(i) {</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    xsim <span class="ot">&lt;-</span> spatstat.random<span class="sc">::</span><span class="fu">rpoispp</span>(<span class="at">lambda =</span> x<span class="sc">$</span>n, <span class="at">win =</span> win)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    spatstat.explore<span class="sc">::</span><span class="fu">Lest</span>(xsim, <span class="at">correction =</span> correction, ...)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> lobs<span class="sc">$</span>r <span class="co"># get distances</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  obs <span class="ot">&lt;-</span> lobs<span class="sc">$</span>iso <span class="co"># get estimated l for observed</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get estimated l for each simulated data set</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  sim <span class="ot">&lt;-</span> <span class="fu">sapply</span>(lsim, getElement, <span class="st">"iso"</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># apply the min function to each row  (MARGIN = 1) of sim</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># gets pointwise minimum for simulated data</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># at each distance.  do same for max, quantiles, median</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  lo <span class="ot">&lt;-</span> <span class="fu">apply</span>(sim, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> min, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  hi <span class="ot">&lt;-</span> <span class="fu">apply</span>(sim, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> max, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  alpha <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> level</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  qlo <span class="ot">&lt;-</span> <span class="fu">apply</span>(sim, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> quantile,</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">prob =</span> alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  qhi <span class="ot">&lt;-</span> <span class="fu">apply</span>(sim, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> quantile,</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>               <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>  med <span class="ot">&lt;-</span> <span class="fu">apply</span>(sim, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> median, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># construct empty plot of the right size</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">range</span>(r), <span class="fu">c</span>(<span class="fu">min</span>(<span class="fu">c</span>(lo, obs) <span class="sc">-</span> r, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">max</span>(<span class="fu">c</span>(hi, obs) <span class="sc">-</span> r, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>       <span class="at">type =</span> <span class="st">"n"</span>,</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">"distance"</span>, <span class="at">ylab =</span> <span class="st">"L(r) - r"</span>)</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># plot different statistics with different styles/thickness</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(r, obs <span class="sc">-</span> r, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(r, lo <span class="sc">-</span> r, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(r, hi <span class="sc">-</span> r, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(r, qlo <span class="sc">-</span> r, <span class="at">lty =</span> <span class="dv">1</span>)</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(r, qhi <span class="sc">-</span> r, <span class="at">lty =</span> <span class="dv">1</span>)</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pbapply)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lplot</span>(<span class="at">x=</span>numata_pines)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="robby_homework_2_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="part-b." class="level3">
+<h3 class="anchored" data-anchor-id="part-b.">Part b.</h3>
+<blockquote class="blockquote">
+<p>Based on the plot from part a, the Japanese Pines data appears consistent with CSR across all spatial scales and no indication of regularity or clustering.</p>
+</blockquote>
+</section>
+<section id="part-c." class="level3">
+<h3 class="anchored" data-anchor-id="part-c.">Part c.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>win <span class="ot">=</span> numata_pines<span class="sc">$</span>window</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">=</span> numata_pines<span class="sc">$</span>n</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>lobserved <span class="ot">&lt;-</span> spatstat.explore<span class="sc">::</span><span class="fu">Lest</span>(<span class="at">X=</span>numata_pines, <span class="at">correction =</span> <span class="st">"Ripley"</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>lr <span class="ot">=</span> lobserved<span class="sc">$</span>iso</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>r <span class="ot">=</span> lobserved<span class="sc">$</span>r</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>tobs <span class="ot">=</span> <span class="fu">max</span>(<span class="fu">abs</span>(lr<span class="sc">-</span>r))</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>lrl <span class="ot">&lt;-</span> pbapply<span class="sc">::</span><span class="fu">pbsapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">499</span>, <span class="at">FUN =</span> <span class="cf">function</span>(i) {</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  xs <span class="ot">&lt;-</span> spatstat.random<span class="sc">::</span><span class="fu">rpoispp</span>(<span class="at">lambda =</span> lambda, <span class="at">win =</span> win)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(<span class="fu">abs</span>(spatstat.explore<span class="sc">::</span><span class="fu">Lest</span>(xs,<span class="at">correction =</span> <span class="st">"Ripley"</span>)<span class="sc">$</span>iso<span class="sc">-</span>r))</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(tobs,lrl)<span class="sc">&gt;=</span>tobs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.704</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The Monte Carlo p-value suggests that the Numata Pines data is consistent with CSR since we fail to reject the null that our observed test statistic and the simulated test statistic come from the same distribution, and since the simulated distribution is consistent with CSR by design.</p>
+</blockquote>
+</section>
+</section>
+<section id="problem-2" class="level2">
+<h2 class="anchored" data-anchor-id="problem-2">Problem 2</h2>
+<section id="part-a.-1" class="level3">
+<h3 class="anchored" data-anchor-id="part-a.-1">Part a.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>redwood <span class="ot">&lt;-</span> spatstat.data<span class="sc">::</span>redwood</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(redwood<span class="sc">$</span>x,redwood<span class="sc">$</span>y,<span class="at">xlab=</span><span class="st">'U'</span>,<span class="at">ylab=</span><span class="st">'V'</span>,<span class="at">main=</span><span class="st">'California Redwood Seedling/Sapling Locations'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="robby_homework_2_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>At first glance, the distribution of seedling/sapling locations does not appear to be consistent with CSR and we see some potential clustering.</p>
+</blockquote>
+</section>
+<section id="part-b.-1" class="level3">
+<h3 class="anchored" data-anchor-id="part-b.-1">Part b.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dim <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>bx <span class="ot">=</span> <span class="fu">sd</span>(redwood<span class="sc">$</span>x)<span class="sc">*</span><span class="fu">length</span>(redwood<span class="sc">$</span>x)<span class="sc">^</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">/</span>(dim<span class="sc">+</span><span class="dv">4</span>))</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>by <span class="ot">=</span> <span class="fu">sd</span>(redwood<span class="sc">$</span>y)<span class="sc">*</span><span class="fu">length</span>(redwood<span class="sc">$</span>y)<span class="sc">^</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">/</span>(dim<span class="sc">+</span><span class="dv">4</span>))</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>ix <span class="ot">=</span> <span class="fu">density</span>(redwood,<span class="at">sigma =</span> <span class="fu">c</span>(bx,by))</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span>(ix<span class="sc">$</span>v,<span class="at">main=</span><span class="st">'California Redwood Seedling/Sapling Contours'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="robby_homework_2_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Since the contours show areas of greater or lower intensity relative to the rest of the study area, we would not think the underlying data to be consistent with CSR.</p>
+</blockquote>
+</section>
+<section id="part-c.-1" class="level3">
+<h3 class="anchored" data-anchor-id="part-c.-1">Part c.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lplot</span>(redwood)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="robby_homework_2_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="part-d." class="level3">
+<h3 class="anchored" data-anchor-id="part-d.">Part d.</h3>
+<blockquote class="blockquote">
+<p>From the L(r) - r plot above we can see that there is evidence of clustering beyond what we would expect for a point process compatible with CSR for certain spatial scales up to about r=0.22.</p>
+</blockquote>
+</section>
+<section id="part-e." class="level3">
+<h3 class="anchored" data-anchor-id="part-e.">Part e.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>win <span class="ot">=</span> redwood<span class="sc">$</span>window</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">=</span> redwood<span class="sc">$</span>n</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>lobserved <span class="ot">&lt;-</span> spatstat.explore<span class="sc">::</span><span class="fu">Lest</span>(<span class="at">X=</span>redwood, <span class="at">correction =</span> <span class="st">"Ripley"</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>lr <span class="ot">=</span> lobserved<span class="sc">$</span>iso</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>r <span class="ot">=</span> lobserved<span class="sc">$</span>r</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>tobs <span class="ot">=</span> <span class="fu">max</span>(<span class="fu">abs</span>(lr<span class="sc">-</span>r))</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>lrl <span class="ot">&lt;-</span> pbapply<span class="sc">::</span><span class="fu">pbsapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">499</span>, <span class="at">FUN =</span> <span class="cf">function</span>(i) {</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  xs <span class="ot">&lt;-</span> spatstat.random<span class="sc">::</span><span class="fu">rpoispp</span>(<span class="at">lambda =</span> lambda, <span class="at">win =</span> win)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(<span class="fu">abs</span>(spatstat.explore<span class="sc">::</span><span class="fu">Lest</span>(xs,<span class="at">correction =</span> <span class="st">"Ripley"</span>)<span class="sc">$</span>iso<span class="sc">-</span>r))</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(tobs,lrl)<span class="sc">&gt;=</span>tobs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.002</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>From the Monte-Carlo p-value calculated above we reject the null that the observed statistic is from a distribution compatible with CSR.</p>
+</blockquote>
+</section>
+<section id="part-f." class="level3">
+<h3 class="anchored" data-anchor-id="part-f.">Part f.</h3>
+<blockquote class="blockquote">
+<p>Overall, there appears to be enough evidence to support the conclusion that the Redwood sapling locations are not compatible with CSR and there is more clustering than would be expected from a CSR point process.</p>
+</blockquote>
+</section>
+</section>
+<section id="problem-3" class="level2">
+<h2 class="anchored" data-anchor-id="problem-3">Problem 3</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">15</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">2</span>,<span class="at">len =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="part-a.-2" class="level3">
+<h3 class="anchored" data-anchor-id="part-a.-2">Part a.</h3>
+<blockquote class="blockquote">
+<p>evaluate the Gaussian kernel function (dnorm) at each value of h using the event location as the mean argument and a sd argument of 0.10</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>kvals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>){</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  j <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (xi <span class="cf">in</span> x){</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    j <span class="ot">=</span> j<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    kg <span class="ot">=</span> <span class="fu">dnorm</span>(xi,<span class="at">mean =</span> h[i], <span class="at">sd=</span><span class="fl">0.10</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    kvals[i,j] <span class="ot">=</span> kg</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(kvals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   1000 obs. of  15 variables:
+ $ V1 : num  6.68e-35 9.76e-35 1.43e-34 2.08e-34 3.03e-34 ...
+ $ V2 : num  5.22e-41 7.89e-41 1.19e-40 1.79e-40 2.70e-40 ...
+ $ V3 : num  7.61e-54 1.22e-53 1.95e-53 3.13e-53 5.00e-53 ...
+ $ V4 : num  3.40e-79 6.04e-79 1.07e-78 1.89e-78 3.34e-78 ...
+ $ V5 : num  1.75e-31 2.51e-31 3.60e-31 5.16e-31 7.37e-31 ...
+ $ V6 : num  2.21e-78 3.90e-78 6.89e-78 1.21e-77 2.14e-77 ...
+ $ V7 : num  3.03e-82 5.43e-82 9.72e-82 1.74e-81 3.11e-81 ...
+ $ V8 : num  5.08e-60 8.37e-60 1.38e-59 2.26e-59 3.71e-59 ...
+ $ V9 : num  9.33e-58 1.52e-57 2.48e-57 4.03e-57 6.55e-57 ...
+ $ V10: num  1.32e-24 1.81e-24 2.49e-24 3.42e-24 4.69e-24 ...
+ $ V11: num  1.05e-31 1.50e-31 2.15e-31 3.09e-31 4.42e-31 ...
+ $ V12: num  3.48e-30 4.95e-30 7.04e-30 1.00e-29 1.42e-29 ...
+ $ V13: num  6.31e-62 1.05e-61 1.73e-61 2.87e-61 4.75e-61 ...
+ $ V14: num  1.00e-41 1.52e-41 2.30e-41 3.47e-41 5.25e-41 ...
+ $ V15: num  3.83e-68 6.51e-68 1.11e-67 1.88e-67 3.19e-67 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>kval_totals <span class="ot">&lt;-</span> <span class="fu">pbapply</span>(kvals,<span class="at">MARGIN=</span><span class="dv">1</span>,<span class="at">FUN=</span><span class="st">'sum'</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(h,kval_totals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="robby_homework_2_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Part b.</p>
+<blockquote class="blockquote">
+<p>Repeat using sd/bandwidth of 0.25</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>kvals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>){</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  j <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (xi <span class="cf">in</span> x){</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    j <span class="ot">=</span> j<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    kg <span class="ot">=</span> <span class="fu">dnorm</span>(xi,<span class="at">mean =</span> h[i], <span class="at">sd=</span>.<span class="dv">25</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    kvals[i,j] <span class="ot">=</span> kg</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(kvals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   1000 obs. of  15 variables:
+ $ V1 : num  4.35e-06 4.63e-06 4.91e-06 5.22e-06 5.54e-06 ...
+ $ V2 : num  4.59e-07 4.90e-07 5.23e-07 5.59e-07 5.97e-07 ...
+ $ V3 : num  4.05e-09 4.37e-09 4.71e-09 5.08e-09 5.48e-09 ...
+ $ V4 : num  3.56e-13 3.91e-13 4.28e-13 4.69e-13 5.14e-13 ...
+ $ V5 : num  1.53e-05 1.63e-05 1.72e-05 1.82e-05 1.93e-05 ...
+ $ V6 : num  4.81e-13 5.26e-13 5.77e-13 6.31e-13 6.91e-13 ...
+ $ V7 : num  1.16e-13 1.27e-13 1.40e-13 1.53e-13 1.68e-13 ...
+ $ V8 : num  4.17e-10 4.51e-10 4.89e-10 5.29e-10 5.73e-10 ...
+ $ V9 : num  9.59e-10 1.04e-09 1.12e-09 1.21e-09 1.31e-09 ...
+ $ V10: num  0.000193 0.000203 0.000214 0.000225 0.000237 ...
+ $ V11: num  1.41e-05 1.50e-05 1.59e-05 1.68e-05 1.78e-05 ...
+ $ V12: num  2.47e-05 2.62e-05 2.77e-05 2.93e-05 3.10e-05 ...
+ $ V13: num  2.06e-10 2.24e-10 2.43e-10 2.63e-10 2.85e-10 ...
+ $ V14: num  3.52e-07 3.77e-07 4.02e-07 4.30e-07 4.59e-07 ...
+ $ V15: num  2.09e-11 2.28e-11 2.48e-11 2.70e-11 2.93e-11 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>kval_totals <span class="ot">&lt;-</span> <span class="fu">pbapply</span>(kvals,<span class="at">MARGIN=</span><span class="dv">1</span>,<span class="at">FUN=</span><span class="st">'sum'</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(h,kval_totals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="robby_homework_2_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Part c.</p>
+<blockquote class="blockquote">
+<p>The relationship between the bandwidth and the smoothness of the density function is that a larger bandwidth gives a smoother density function.</p>
+</blockquote>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Case-Control Point Data Homework (First- and Second-Order Properties)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="cc-r-kd-hw_files/libs/clipboard/clipboard.min.js"></script>
+<script src="cc-r-kd-hw_files/libs/quarto-html/quarto.js"></script>
+<script src="cc-r-kd-hw_files/libs/quarto-html/popper.min.js"></script>
+<script src="cc-r-kd-hw_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="cc-r-kd-hw_files/libs/quarto-html/anchor.min.js"></script>
+<link href="cc-r-kd-hw_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="cc-r-kd-hw_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="cc-r-kd-hw_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="cc-r-kd-hw_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="cc-r-kd-hw_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Case-Control Point Data Homework (First- and Second-Order Properties)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Instructions: Answer the following questions and write your answers in a word processor. Mathematical symbols should be written using the equation editor. Appropriate graphics should be included. The document may also be created in LaTeX, though this is NOT encouraged.</p>
+<section id="problem-1" class="level1">
+<h1>Problem 1</h1>
+<p>The <code>urkiola</code> data set in the <strong>spatstat package</strong> contains locations of birch (Betula celtiberica) and oak (Quercus robur) trees in a secondary wood in Urkiola Natural Park (Basque country, northern Spain). They are part of a more extensive dataset collected and analysed by Laskurain (2008). The coordinates of the trees are given in meters. Let the “oak” trees be the cases and “birch” trees be the controls.</p>
+<section id="a." class="level2">
+<h2 class="anchored" data-anchor-id="a.">a.</h2>
+<p>Create a plot of the of the point pattern that distinguishes between the two types of trees. Do you notice any evidence of clusters? Explain.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatstat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.data</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.geom</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>spatstat.geom 3.2-5</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.random</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>spatstat.random 3.1-6</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.explore</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: nlme</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>spatstat.explore 3.2-3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.model</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: rpart</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>spatstat.model 3.2-6</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: spatstat.linnet</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>spatstat.linnet 3.1-1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+spatstat 3.0-6 
+For an introduction to spatstat, type 'beginner' </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>urk <span class="ot">&lt;-</span> spatstat.data<span class="sc">::</span>urkiola</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(urk,<span class="at">cols=</span><span class="fu">c</span>(<span class="st">'blue'</span>,<span class="st">'green'</span>),<span class="at">main =</span> <span class="st">'Urkiola Birch and Oak Locations'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>From the above plot we can see areas where more birch trees appear to be prominent relative to the oak trees but it is hard to say if the oak trees are clustering in a different manner than the birch locations. It does appear that there are fewer oak trees found in the upper left region while the oak trees do appear more plentiful in the inner regions.</p>
+</blockquote>
+</section>
+<section id="b." class="level2">
+<h2 class="anchored" data-anchor-id="b.">b.</h2>
+<p>Create contour plots of the spatial density function for the oak and birch trees. Use a bandwidth of 14.5 for the oak trees and 15 for the birch trees. Do any differences jump out to you?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(smacpod)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>oak <span class="ot">&lt;-</span> <span class="fu">which</span>(urk<span class="sc">$</span>marks <span class="sc">==</span> <span class="st">'oak'</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>birch <span class="ot">&lt;-</span> <span class="fu">which</span>(urk<span class="sc">$</span>marks <span class="sc">==</span> <span class="st">'birch'</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>oak_sp <span class="ot">&lt;-</span> <span class="fu">spdensity</span>(urk[oak],<span class="at">sigma=</span><span class="fl">14.5</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>birch_sp <span class="ot">&lt;-</span> <span class="fu">spdensity</span>(urk[birch],<span class="at">sigma=</span><span class="dv">15</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># contour plot of oak with title</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span>(oak_sp, <span class="at">nlevels =</span> <span class="dv">15</span>, <span class="at">main =</span> <span class="st">""</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Oak, bandwidth = 14.5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contour plot of birch, with title</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span>(birch_sp, <span class="at">nlevels =</span> <span class="dv">15</span>, <span class="at">main =</span> <span class="st">""</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Birch, bandwidth = 15"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The contour plots show some differences between the oak and birch intensities. It appears that in both plots the intensities are flatter in some areas relative to other areas but these locations do not match between the oak and birch plots. This implies that the relative intensities between birch and oak tree locations are different.</p>
+</blockquote>
+</section>
+<section id="c." class="level2">
+<h2 class="anchored" data-anchor-id="c.">c.</h2>
+<p>Estimate the log ratio of the spatial density of the oak trees relative to the birch trees (<span class="math inline">\(r(s)\)</span>) using a bandwidth of 16. Create a contour plot of the log ratio. Which areas are most inconsistent with the belief that the spatial densities for the two types of trees are the same?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># log ratio of spatial densities</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>r_oak <span class="ot">=</span> <span class="fu">logrr</span>(urk, <span class="at">case =</span> <span class="st">"oak"</span>, <span class="at">sigma =</span> <span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>oak has been selected as the case group</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contour plot of r_oak</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span>(r_oak, <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">main =</span> <span class="st">""</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Gaussian kernel, Bandwidth = 16"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The region in the top left of the plot are inconsistent with the belief that the spatial densities are the same for both tree types.</p>
+</blockquote>
+</section>
+<section id="d." class="level2">
+<h2 class="anchored" data-anchor-id="d.">d.</h2>
+<p>Construct pointwise 95% tolerance envelopes for <span class="math inline">\(r(s)\)</span> using 499 data sets simulated under the random labeling hypothesis. Plot the regions above and below the tolerance envelopes in different colors. Overlay the contour plot of <span class="math inline">\(\tilde{r}(s)\)</span>. What can you conclude?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct 95% tolerance envelopes for log relative risk</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>lrr_oak <span class="ot">=</span> <span class="fu">logrr</span>(urk, <span class="at">sigma =</span> <span class="dv">16</span>, <span class="at">case =</span> <span class="st">'oak'</span>, <span class="at">nsim =</span> <span class="dv">499</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>oak has been selected as the case group</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lrr_oak)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>From the overlaid contour plot, we can see evidence of birch tree clustering relative to oak trees in the upper left region and far bottom right region. Alternatively, in the center we actually see evidence of the oak trees clustering relative to the birch tree locations.</p>
+</blockquote>
+</section>
+<section id="e." class="level2">
+<h2 class="anchored" data-anchor-id="e.">e.</h2>
+<p>Perform a global test of clustering using <span class="math inline">\(\tilde{r}(s)\)</span>. Is there convincing evidence of clustering of one group relative to the other for at least one location in the study area?.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logrr.test</span>(lrr_oak)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Kelsall and Diggle (1995) test for log relative risk
+
+r(s) = ln[f(s)/g(s)]
+f(s) = spatial density of cases at location s
+g(s) = spatial density of controls at location s
+case label:  oak 
+control label:  birch 
+
+null hypothesis: r(s) = 0 for all s in study area
+alternative hypothesis: r(s) != 0 for at least one s in study area
+test statistic: 7839.597 
+p-value: 0.002 
+nsim: 499 
+simulation procedure: random labeling</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Yes, we can reject the null hypothesis that r(s) = 0 for all s at the alpha=0.05 level. This implies that there is evidence of clustering of the cases relative to the controls.</p>
+</blockquote>
+</section>
+<section id="f." class="level2">
+<h2 class="anchored" data-anchor-id="f.">f.</h2>
+<p>Construct a plot for the difference in K functions between the oak trees and the birch trees. Also include min/max envelopes for this difference using 499 simulated data sets under the random labeling hypothesis. Also construct 95% pointwise tolerance envelopes. Also include the mean difference from the simulations. Provide a legend labeling these things. Are there any spatial scales for which the oak trees are more clustered than the birch trees in comparison to what we expect under the random labeling hypothesis (or vice versa)? If so, what scales?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">### difference in K functions</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate K function for birch and oak,</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># take their difference</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>kd <span class="ot">=</span> <span class="fu">kdest</span>(urk, <span class="at">case =</span> <span class="st">'oak'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>oak has been selected as the case group</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot estimated and theoretical KD (under RLH)</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(kd, <span class="fu">cbind</span>(iso, theo) <span class="sc">~</span> r, <span class="at">legend =</span> <span class="cn">FALSE</span>, <span class="at">main =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct envelopes using 499 randomly labeled data sets</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>kdenv <span class="ot">=</span> <span class="fu">kdest</span>(urk, <span class="at">case =</span> <span class="st">"oak"</span>, <span class="at">nsim =</span> <span class="dv">499</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>oak has been selected as the case group</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 499 simulations by evaluating expression  ...
+1, 2, 3, .5 [4:40 remaining] ...
+.10 [4:36 remaining] ....15 [4:32 remaining] ....20 [4:29 remaining] ..
+..25 [4:26 remaining] ....30 [4:23 remaining] ....35 [4:20 remaining] .
+...40 [4:17 remaining] ....45 [4:14 remaining] ....50
+ [4:11 remaining] ....55 [4:09 remaining] ....60 [4:05 remaining] ....
+65 [4:02 remaining] ....70 [3:59 remaining] ....75 [3:56 remaining] ...
+.80 [3:53 remaining] ....85 [3:51 remaining] ....90 [3:47 remaining] ..
+..95 [3:44 remaining] ....100 [3:41 remaining] ....105 [3:38 remaining] .
+...110 [3:36 remaining] ....115 [3:33 remaining] ....120
+ [3:30 remaining] ....125 [3:27 remaining] ....130 [3:24 remaining] ....
+135 [3:21 remaining] ....140 [3:18 remaining] ....145 [3:16 remaining] ...
+.150 [3:13 remaining] ....155 [3:10 remaining] ....160 [3:07 remaining] ..
+..165 [3:05 remaining] ....170 [3:02 remaining] ....175 [2:59 remaining] .
+...180 [2:56 remaining] ....185 [2:54 remaining] ....190
+ [2:51 remaining] ....195 [2:48 remaining] ....200 [2:45 remaining] ....
+205 [2:42 remaining] ....210 [2:40 remaining] ....215 [2:37 remaining] ...
+.220 [2:34 remaining] ....225 [2:31 remaining] ....230 [2:28 remaining] ..
+..235 [2:26 remaining] ....240 [2:23 remaining] ....245 [2:20 remaining] .
+...250 [2:17 remaining] ....255 [2:15 remaining] ....260
+ [2:12 remaining] ....265 [2:09 remaining] ....270 [2:06 remaining] ....
+275 [2:04 remaining] ....280 [2:01 remaining] ....285 [1:58 remaining] ...
+.290 [1:55 remaining] ....295 [1:53 remaining] ....300 [1:50 remaining] ..
+..305 [1:47 remaining] ....310 [1:44 remaining] ....315 [1:41 remaining] .
+...320 [1:39 remaining] ....325 [1:36 remaining] ....330
+ [1:33 remaining] ....335 [1:30 remaining] ....340 [1:28 remaining] ....
+345 [1:25 remaining] ....350 [1:22 remaining] ....355 [1:19 remaining] ...
+.360 [1:17 remaining] ....365 [1:14 remaining] ....370 [1:11 remaining] ..
+..375 [1:08 remaining] ....380 [1:06 remaining] ....385 [1:03 remaining] .
+...390 [1:00 remaining] ....395 [57 sec remaining] ....400
+ [55 sec remaining] ....405 [52 sec remaining] ....410 [49 sec remaining] ....
+415 [46 sec remaining] ....420 [44 sec remaining] ....425 [41 sec remaining] ...
+.430 [38 sec remaining] ....435 [35 sec remaining] ....440 [33 sec remaining] ..
+..445 [30 sec remaining] ....450 [27 sec remaining] ....455 [24 sec remaining] .
+...460 [22 sec remaining] ....465 [19 sec remaining] ....470
+ [16 sec remaining] ....475 [13 sec remaining] ....480 [11 sec remaining] ....
+485 [8 sec remaining] ....490 [5 sec remaining] ....495 [2 sec remaining] ...
+
+499.
+
+Done.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(kdenv)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"obs"</span>, <span class="st">"avg"</span>, <span class="st">"max/min env"</span>, <span class="st">"95% env"</span>),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"darkgrey"</span>, <span class="st">"lightgrey"</span>),</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>It appears that beyond around r=15 meters spatial scale, the oak trees show evidence of clustering relative to the birch trees. To confirm, we can look at the summary function for the kdest object.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(kdenv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>KD(r) &gt; upper envelope limit for the following r:
+0.7319336 
+13.68716 to 13.83354 
+13.97993 to 37.475 </code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>From the summary results we can see that there is evidence of clustering of the oak trees relative to the controls for the spatial distance ranges specified.</p>
+</blockquote>
+</section>
+<section id="g." class="level2">
+<h2 class="anchored" data-anchor-id="g.">g.</h2>
+<p>Perform a global test for clustering of the oak trees relative to the birch trees using the <span class="math inline">\(KD_+\)</span> statistic. Interpret the results.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kdplus.test</span>(kdenv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Diggle and Chetwynd (1991) test for difference in K functions
+
+KD(r) = K_case(r) - K_control(r)
+case label:  oak 
+control label:  birch 
+
+null hypothesis: KD(r) = 0 for all r between 0 and 37.475 
+alternative hypothesis: KD(r) &gt; 0 for at least one r between 0 and 37.475 
+test statistic: 1567.397 
+p-value: 0.004 
+nsim: 499 
+simulation procedure: random labeling</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The global test p-value allows us to conclude that there is evidence of clustering in the cases relative to the controls for at least 1 value of r between 0 and 37.475. This outcome is in line with our plot showing the 95% confidence bands.</p>
+</blockquote>
+</section>
+</section>
+<section id="problem-2" class="level1">
+<h1>Problem 2</h1>
+<p>The <code>paracou</code> data set in the <strong>spatstat</strong> package contains data for Kimboto trees observed in Paracou, French Guiana. Let the juveniles be the controls and adults be the cases. Use a bandwidth of 40 when estimating the densities of the juveniles and 65 for the adults. Use a bandwidth of 52.5 when estimating the log ratio of spatial densities.</p>
+<section id="a.-1" class="level2">
+<h2 class="anchored" data-anchor-id="a.-1">a.</h2>
+<p>Create a plot of the of the point pattern that distinguishes between the two types of trees. Do you notice any evidence of clusters? Explain.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>kimboto <span class="ot">&lt;-</span> spatstat.data<span class="sc">::</span>paracou</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(kimboto,<span class="at">cols=</span><span class="fu">c</span>(<span class="st">'blue'</span>,<span class="st">'green'</span>),<span class="at">main =</span> <span class="st">'Kimboto Juvenile and Adult Locations'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>At a glance, there appears to be significantly more clustering in the juvenile kimboto locations relative to the adult locations.</p>
+</blockquote>
+</section>
+<section id="b.-1" class="level2">
+<h2 class="anchored" data-anchor-id="b.-1">b.</h2>
+<p>Create contour plots of the spatial density function for the adult and juvenile trees. Use a bandwidth of 65 for the adult trees and 40 for the juvenile trees. Do any differences jump out to you?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>adult <span class="ot">&lt;-</span> <span class="fu">which</span>(kimboto<span class="sc">$</span>marks <span class="sc">==</span> <span class="st">'adult'</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>juvenile <span class="ot">&lt;-</span> <span class="fu">which</span>(kimboto<span class="sc">$</span>marks <span class="sc">==</span> <span class="st">'juvenile'</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>adult_sp <span class="ot">&lt;-</span> <span class="fu">spdensity</span>(kimboto[adult],<span class="at">sigma=</span><span class="dv">65</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>juv_sp <span class="ot">&lt;-</span> <span class="fu">spdensity</span>(kimboto[juvenile],<span class="at">sigma=</span><span class="dv">40</span>)</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co"># contour plot of adult kimbotos with title</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span>(adult_sp, <span class="at">nlevels =</span> <span class="dv">15</span>, <span class="at">main =</span> <span class="st">""</span>)</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Adult, bandwidth = 65"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contour plot of juveniles, with title</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span>(juv_sp, <span class="at">nlevels =</span> <span class="dv">15</span>, <span class="at">main =</span> <span class="st">""</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Juvenile, bandwidth = 40"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The Juvenile Kimboto relative intensities appear to vary much more than the adult kimbotos and do not seem to match up to the adult contours.</p>
+</blockquote>
+</section>
+<section id="c.-1" class="level2">
+<h2 class="anchored" data-anchor-id="c.-1">c.</h2>
+<p>Estimate the log ratio of the spatial density of the adult trees relative to the juvenile trees (<span class="math inline">\(r(s)\)</span>) using a bandwidth of 52.5. Create a contour plot of the log ratio. Which areas are most inconsistent with the belief that the spatial densities for the two types of trees are the same?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># log ratio of spatial densities</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>r_adult <span class="ot">=</span> <span class="fu">logrr</span>(kimboto, <span class="at">case =</span> <span class="st">"adult"</span>, <span class="at">sigma =</span> <span class="fl">52.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>adult has been selected as the case group</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contour plot of r_adult</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span>(r_adult, <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">main =</span> <span class="st">""</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Gaussian kernel, Bandwidth = 52.5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The region least consistent with the belief that the two types of trees have the same spatial densities are in the bottom right and bottom left of the plot.</p>
+</blockquote>
+</section>
+<section id="d.-1" class="level2">
+<h2 class="anchored" data-anchor-id="d.-1">d.</h2>
+<p>Construct pointwise 95% tolerance envelopes for <span class="math inline">\(r(s)\)</span> using 499 data sets simulated under the random labeling hypothesis. Plot the regions above and below the tolerance envelopes in different colors. Overlay the contour plot of <span class="math inline">\(\tilde{r}(s)\)</span>). What can you conclude?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct 95% tolerance envelopes for log relative risk</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>lrr_adult <span class="ot">=</span> <span class="fu">logrr</span>(kimboto, <span class="at">sigma =</span> <span class="fl">52.5</span>, <span class="at">case =</span> <span class="st">'adult'</span>, <span class="at">nsim =</span> <span class="dv">499</span>,</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>adult has been selected as the case group</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lrr_adult)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>From the overlaid spatial densities we can see evidence of the control juvenile trees clustering relative to the case ‘adult’ trees in the bottom right area, whereas in the top and bottom left areas marked in yellow we see evidence of clustering for the case ‘adult’ trees relative to the control ‘juvenile’ trees.</p>
+</blockquote>
+</section>
+<section id="e.-1" class="level2">
+<h2 class="anchored" data-anchor-id="e.-1">e.</h2>
+<p>Perform a global test of clustering using <span class="math inline">\(\tilde{r}(s)\)</span>). Is there convincing evidence of clustering of one group relative to the other for at least one location in the study area?.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logrr.test</span>(lrr_adult)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Kelsall and Diggle (1995) test for log relative risk
+
+r(s) = ln[f(s)/g(s)]
+f(s) = spatial density of cases at location s
+g(s) = spatial density of controls at location s
+case label:  adult 
+control label:  juvenile 
+
+null hypothesis: r(s) = 0 for all s in study area
+alternative hypothesis: r(s) != 0 for at least one s in study area
+test statistic: 125222.1 
+p-value: 0.036 
+nsim: 499 
+simulation procedure: random labeling</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>At the alpha=.05 level, we can reject the null hypthesis that the spatial densities of the two types of trees are the same. This is in line our observed spatial density overlaid contour plot.</p>
+</blockquote>
+</section>
+<section id="f.-1" class="level2">
+<h2 class="anchored" data-anchor-id="f.-1">f.</h2>
+<p>Construct a plot for the difference in K functions between the adult trees and the juvenile trees. Also include min/max envelopes for this difference using 499 simulated data sets under the random labeling hypothesis. Also construct 95% pointwise tolerance envelopes. Also include the mean difference from the simulations. Provide a legend labeling these things. Are there any spatial scales for which the adult trees are more clustered than the juvenile trees in comparison to what we expect under the random labeling hypothesis (or vice versa)? If so, what scales?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="do">### difference in K functions</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate K function for adult and juvenile,</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># take their difference</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>kd <span class="ot">=</span> <span class="fu">kdest</span>(kimboto, <span class="at">case =</span> <span class="st">'adult'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>adult has been selected as the case group</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot estimated and theoretical KD (under RLH)</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(kd, <span class="fu">cbind</span>(iso, theo) <span class="sc">~</span> r, <span class="at">legend =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct envelopes using 499 randomly labeled data sets</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>kdenv <span class="ot">=</span> <span class="fu">kdest</span>(kimboto, <span class="at">case =</span> <span class="st">"adult"</span>, <span class="at">nsim =</span> <span class="dv">499</span>,</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>adult has been selected as the case group</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 499 simulations by evaluating expression  ...
+1, 2, 3, .5....10....15....20....25....30....35....40....45....50..
+..55....60....65....70....75....80....85....90....95....100....105....110
+....115....120....125....130....135....140....145....150....155....160....165...
+.170....175....180....185....190....195....200....205....210....215....220....225.
+...230....235....240....245....250....255....260....265....270....275....280....
+285....290....295....300....305....310....315....320....325....330....335....340..
+..345....350....355....360....365....370....375....380....385....390....395....400
+....405....410....415....420....425....430....435....440....445....450....455...
+.460....465....470....475....480....485....490....495...
+499.
+
+Done.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(kdenv,<span class="at">ylab=</span><span class="st">'K Difference'</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"obs"</span>, <span class="st">"avg"</span>, <span class="st">"max/min env"</span>, <span class="st">"95% env"</span>),</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"darkgrey"</span>, <span class="st">"lightgrey"</span>),</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cc-r-kd-hw_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>It appears that for many spatial densities between 0 and 25 we see evidence of clustering of the control juvenile trees relative to the adult case trees. To confirm which values exactly, we can use the summary function for the kdest object.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(kdenv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>KD(r) &lt; lower envelope limit for the following r:
+1.565847 to 8.612158 
+11.35239 to 17.81151 
+19.76882 
+24.27063 
+27.20659 to 27.79378 </code></pre>
+</div>
+</div>
+</section>
+<section id="g.-1" class="level2">
+<h2 class="anchored" data-anchor-id="g.-1">g.</h2>
+<p>Perform a global test for clustering of the adult trees relative to the juvenile trees using the <span class="math inline">\(KD_+\)</span> statistic. Interpret the results.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kdplus.test</span>(kdenv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Diggle and Chetwynd (1991) test for difference in K functions
+
+KD(r) = K_case(r) - K_control(r)
+case label:  adult 
+control label:  juvenile 
+
+null hypothesis: KD(r) = 0 for all r between 0 and 100.2142 
+alternative hypothesis: KD(r) &gt; 0 for at least one r between 0 and 100.2142 
+test statistic: -337.9593 
+p-value: 0.824 
+nsim: 499 
+simulation procedure: random labeling</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The high p-value does not allow us to reject the null hypothesis, however since the alternative hypothesis is one sided for KD(r) &gt; 0 this test does not check for clustering of the controls relative to the cases. Were we to swap the ‘case’ and ‘control’ labels of the kimboto trees then we might expect to see a smaller p-value, given the plot of the kdest object.</p>
+</blockquote>
+</section>
+</section>
+<section id="problem-3" class="level1">
+<h1>Problem 3</h1>
+<p>Let <span class="math inline">\(\lambda_0(s)\)</span> denote a control intensity function and <span class="math inline">\(\lambda_1(s)\)</span> denote a case intensity function defined over a study area <span class="math inline">\(D\)</span>. Assume that <span class="math inline">\(\lambda_1(s)=c\lambda_0(s)\)</span> for all <span class="math inline">\(s\in D\)</span>. Show that in this case, <span class="math inline">\(r(s)=0\)</span> for all <span class="math inline">\(s\in D\)</span>.</p>
+</section>
+<section id="problem-4" class="level1">
+<h1>Problem 4</h1>
+<p>Let <span class="math inline">\(\lambda_0(s)\)</span> denote a control intensity function and <span class="math inline">\(\lambda_1(s)\)</span> denote a case intensity function defined over a study area <span class="math inline">\(D\)</span>. Assume that <span class="math inline">\(\lambda_1(s)=c\lambda_0(s)\)</span> for all <span class="math inline">\(s\in D\)</span>.. Show that <span class="math inline">\(f(s)=g(s)\)</span> for all <span class="math inline">\(s\in D\)</span>, where <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are the spatial densities of the cases and controls, respectively.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
