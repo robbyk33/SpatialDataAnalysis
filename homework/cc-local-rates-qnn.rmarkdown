@@ -1,0 +1,247 @@
+---
+title: "Case-Control Point Data Homework (Local Rates and Nearest Neighbors)"
+format: pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Instructions: Answer the following questions and write your answers in a word processor. Mathematical symbols should be written using the equation editor. Appropriate graphics should be included. The document may also be created in LaTeX, though this is NOT encouraged.
+
+# Problem 1
+
+The `urkiola` data set in the **spatstat package** contains locations of birch (Betula celtiberica) and oak (Quercus robur) trees in a secondary wood in Urkiola Natural Park (Basque country, northern Spain). They are part of a more extensive dataset collected and analysed by Laskurain (2008). The coordinates of the trees are given in meters. Let the "oak" trees be the cases and "birch" trees be the controls.
+
+## a.
+
+Perform a test to determine whether the most unusual window of case/control event locations in the study area can be considered a cluster using the spatial scan statistic under the random labeling hypothesis. Use $n_sim=199$ randomly labeled data sets and $\alpha=0.10$. Make sure to clearly describe your null and alternative hypotheses. Make your conclusion in the context of the problem.
+
+
+```{r}
+
+library(smacpod)
+library(spatstat)
+
+
+urkiola <- spatstat.data::urkiola
+
+oak_scan = spscan.test(urkiola, nsim = 199, case = "oak", alpha = 0.1)
+
+# summary of scan test results
+summary(oak_scan)
+
+```
+
+
+The spatial scan statistic allows us to test our null hypothesis of no clustering in the study area. We find evidence of clustering (reject the null at the alpha = 0.1 level) for at least one cluster in the study area. Specifically, our null hypothesis states that none of the windows tested had a clustering of points more than we would expect under the random labeling hypothesis (RLH). The alternative hypothesis instead states that at least one window had a clustering of cases more prominent than we would expect under the RLH.
+
+## b.
+
+Using your analysis from the previous problem, create a plot of the case/control event locations, the associated study area boundary, and a legend indicating the cases/controls. Add the window identifying the most unusual window of case/control event locations (according to the spatial scan statistic) and any potential secondary clusters. Comment on the results.
+
+
+```{r}
+
+library(smacpod)
+
+# plot scan test results
+plot(oak_scan, chars = c(1, 20), main = "most likely cluster for urkiola tree data", border = "orange")
+# extract most likely and other significant clusters
+clusters(oak_scan)
+```
+
+
+> The result identifies the region with the most evidence of clustering, and suggests that no other window had any significant evidence of clustering.
+
+## c.
+
+Perform a test for clustering using the q nearest neighbors method. Use $q=3,5,\ldots,19$ and $n_sim=499$ randomly labeled data sets. For which $q$ are there more cases than we would expect under random labeling in the $q$ locations nearest each case? At what scale does this clustering appear to occur (use the contrasts)?
+
+
+```{r}
+
+# q nearest neighbor test
+qnn.test(urkiola, q = c(3, 5, 7, 9, 11, 13, 15), nsim = 199, case = "oak")
+```
+
+
+> All q's show significant evidence of clustering. Additionally, examining the contrasts we can see that the p-value is small enough to imply a significant difference (at the alpha=0.1 level) in clustering between all values of q.
+
+# Problem 2
+
+Answer the same questions as Problem 1 for the `paracou` data set in the **spatstat** package. Let the `juveniles` be the controls and `adults` be the cases.
+
+## a.
+
+Perform a test to determine whether the most unusual window of case/control event locations in the study area can be considered a cluster using the spatial scan statistic under the random labeling hypothesis. Use $n_sim=199$ randomly labeled data sets and $\alpha=0.10$. Make sure to clearly describe your null and alternative hypotheses. Make your conclusion in the context of the problem.
+
+
+```{r}
+
+
+library(smacpod)
+library(spatstat)
+
+
+paracou <- spatstat.data::paracou
+
+para_scan = spscan.test(paracou, nsim = 199, case = "adult", alpha = 0.1)
+
+# summary of scan test results
+summary(para_scan)
+
+```
+
+
+> We do not see strong evidence of clustering for the Paracou data when comparing the adult (cases) to the juvenile (control) locations. We cannot reject the null (no clustering) at the alpha = 0.1 level and thus cannot conclude that there are any significant clusters outside of what would be expected under the random labeling hypothesis.
+
+## b.
+
+Using your analysis from the previous problem, create a plot of the case/control event locations, the associated study area boundary, and a legend indicating the cases/controls. Add the window identifying the most unusual collection of case/control event locations (according to the spatial scan statistic) and any potential secondary clusters. Comment on the results.
+
+
+```{r}
+
+library(smacpod)
+
+# plot scan test results
+plot(para_scan, chars = c(1, 20), main = "most likely cluster for Paracou data", border = "orange")
+# extract most likely and other significant clusters
+clusters(para_scan)
+```
+
+
+> With no significant clusters, we plot the most likely cluster which appears rather small and on the edge of our study area. From a purely visual perspective, it appears that there may be some adult locations that could be considered a cluster but relative to the dense clusters of juveniles we do not find any of the adult location clusters to be significant.
+
+## c.
+
+Perform a test for clustering using the q nearest neighbors method. Use $q=3,5,\ldots,19$ and $n_sim=499$ randomly labeled data sets. For which $q$ are there more cases than we would expect under random labeling in the q locations nearest each case? At what scale does this clustering appear to occur (use the contrasts)?
+
+
+```{r}
+
+# q nearest neighbor test
+qnn.test(paracou, q = c(3, 5, 7, 9, 11, 13, 15), nsim = 499, case = "adult")
+```
+
+
+> There are no values of q for which there is evidence of clustering in the nearest q locations of each case, thus we cannot reject the null hypothesis which states that there is a significant difference in the number of observed cases for a given value of q than there should be under the random labeling hypothesis.
+
+# Problem 3
+
+Write your own function from scratch to implement the q nearest neighbors method, including performing a Monte Carlo simulation to assess significance of your rests. You may not use any functions from the **spatstat** or **smacpod** packages.
+
+## a.
+
+Create a function, `W`, that takes the event locations and q, the number of nearest neighbors, and returns the `W` matrix discussed in the notes. Apply this function to the `paracou` data with `q = 3`, then use the `image` function to plot the `W` matrix. Make sure to include your code here.
+
+
+```{r}
+
+w <- function(df, qnn) {
+  N = df$n
+  result = matrix(nrow=N,ncol=N)
+  cases = df$marks=='adult'
+  controls = df$marks=='juvenile'
+  
+  
+  for (i in 1:N){
+    i_center = c(df$x[i],df$y[i])
+    i_vectors = cbind(df$x,df$y)
+    dist_v = apply(X=i_vectors,FUN=function(x){ sqrt(sum(x-i_center)^2)},MARGIN=1)
+    q_dist = sort(dist_v)[qnn+1]
+    w_vector = as.numeric(dist_v<=q_dist)
+    w_vector[i] <-  0  # do not count the event location as nearest neighbor
+    result[i,] = w_vector
+    q_length = sum(result[i,])
+    
+    if (q_length!=qnn) {
+      warning(
+        paste("Multiple event locations equally distant from centroid. 
+              Used q = ", q_length)
+      )
+    }
+
+    }
+  result
+  }
+
+output = w(paracou,qnn=3)
+image(output)
+```
+
+
+## b.
+
+Determine the $\delta$ vector discussed in the notes for the `paracou` data, using the adults as cases. Use the formula $\delta^T W \delta$ to determine $T_q$ for $q=3$.
+
+
+```{r}
+
+
+
+case_delta <- paracou$marks=='adult'
+delta_transpose <- t(case_delta)
+
+tq_obs = delta_transpose %*% output %*% case_delta
+```
+
+
+## c.
+
+Generate 499 data sets under the random labeling hypothesis for the paracou data, using the adults as cases. Determine $T_q$ for each simulated data set for $q=3$. Compute the sample mean and variance for the statistics coming from the NULL data (do not include the observed statistic). Compute the Monte Carlo p-value for this test using the observed statistics and the 499 statistics from the simulated data. Make sure to provide your code and clearly indicate the sample mean, sample variance, and Monte Carlo p-value.
+
+
+```{r}
+
+
+df = paracou
+q = 3
+N = df$n
+xmin = min(df$x)
+xmax = max(df$x)
+
+ymin = min(df$y)
+ymax = max(df$y)
+
+nsims = 499
+sim_stats = vector()
+suppressWarnings(for (i in 1:nsims) {
+
+  xvals = runif(N,xmin,xmax)
+  yvals = runif(N,ymin,ymax)
+  r_events = runif(1)
+  case_labels = as.numeric(runif(N)>r_events)
+  
+  temp_data <- data.frame(n=N,xvals,yvals,case_labels)
+  
+  temp_w <- w(temp_data,q)
+  temp_delta <- temp_data$case_labels==1
+  temp_delta_t <- t(temp_delta)
+  
+  tq_stat = temp_delta_t %*% temp_w %*% temp_delta
+  
+  sim_stats[i] = tq_stat
+})
+
+
+sim_mean = mean(sim_stats)
+sim_var = var(sim_stats)
+monte_carlo_p = mean(c(tq_obs,sim_stats)>=tq_obs[1])
+
+paste("Sample Statistic Mean: ", sim_mean)
+paste("Sample Statistic Variance: ", sim_var)
+paste("Observed Statistic Monte Carlo P-Value: ", monte_carlo_p)
+
+
+```
+
+
+# Problem 4
+
+Describe how the set of windows considered for the spatial scan method are constructed. More specifically, consider a specific event location. What would the first window be? What would the next window be for that even location? And so on.
+
+> The set of windows considered for the spatial scan method are constructed by generating circles of variable radius ranging from 0 to some user-defined value (typically half of the width of the study area) on a grid, typically following our event locations. The first window would be a single point of radius 0 at the first of our event locations. The next window at that location would expand until it reached another event location, at which point all radii between the first and second window provide no additional information.
+

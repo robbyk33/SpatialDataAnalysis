@@ -1,0 +1,115 @@
+---
+title: "Hw07 - Geostatistics Homework (Spatial Dependence)"
+format: pdf
+---
+
+The `ox.rda` file contains 126 soil augerings on a 100 x 100m square grid, with 6 columns and 21 rows. Grid is oriented with long axis North-north-west to South-south-east Origin of grid is South-south-east point, 100m outside grid.
+
+The original data are part of a soil survey carried out by P.A. Burrough in 1967. The survey area is located on the chalk downlands on the Berkshire Downs in Oxfordshire, UK. The data frame contains the following variables:
+
+- `x`: x-coordinate, field, non-projected.
+- `y`: y-coordinate, field, non-projected.
+- `k`: K (potassium), 0-20 cm, ppm.
+
+These data are a subset of the `oxford` data set contained in the **gstat** package.
+
+Load the `ox` data frame.
+
+Then:
+
+1. Use the `ox` data frame to create an `sf` object using `x` and `y` as coordinates.
+2. Use the `sf` `data.frame` to construct a `gstat` object using `k` as the response with a constant mean. 
+3. Construct a `geodata` object (from the **geoR** package) with `k` as the response.
+
+# Problem 1 
+
+Create a bubble plot of the observed data using 10 bins from 0 to 10 in increments of 1.
+
+**Solution**
+
+# Problem 2 (Using **gstat**)
+
+## (a)
+
+Create a `gstat` variogram object.  The cutoff distance should be 600.  The width of each lag interval should be the cutoff distance divided by 16.  Plot this object.  Does the semivariogram seem to have a well-defined structure?  If so, what are the sill, nugget effect, and range, approximately?
+
+**Solution**
+
+## (b)
+
+Fit exponential, spherical, and Matern semivariogram models to the empirical semivariogram in (a) using WRSS.  Use `fit.kappa = TRUE` for the Matern model to estimate the associated smoothness parameter.
+
+Use a table to summarize the estimated partial sill, range parameter, and nugget for each model.  What is the estimated smoothness parameter for the Matern model?
+
+**Solution**
+
+## (c)
+
+In one plot, overlay each fitted variogram model from (c) to the empirical semivariogram found in (b).  Note: You will need to extract the relevant information from your gstat variogram object.  Also, you will probably want to use the `variogramLine` function to obtain values for the theoretical models of each fitted model.  Use this information to construct a single plot with the empirical semivariogram and the fitted models, making sure to label each model properly.
+
+**Solution**
+
+# Problem 3 (Using **geoR**)
+
+## (a)
+
+Use the geoR `variog` function to create an empirical semivariogram.  The `max.dist` value should be the same as the cutoff from Problem 2.  Use 20 lag intervals.  Plot this object.
+
+**Solution**
+
+## (b)
+(Fit exponential, spherical, and Matern variogram models to empirical semivariogram in (a) using WRSS.  Use `fix.kappa = FALSE` for the Matern model to estimate the associated smoothness parameter.  Use a table to summarize the estimated partial sill, range parameter, and nugget for each model.  Provide plots of each fitted variogram model to the empirical variogram.  What is the estimated smoothness parameter for the Matern model?
+
+## (c)
+
+In one plot, overlay each fitted variogram model from (b) to the empirical semivariogram found in (a).  Making sure to label each model properly.
+
+**Solution**
+
+## (d)
+
+Use the `variog4` function to create a directional semivariogram (using the default direction).  Set `maxdist` to be 600. Use 10 bins. Plot this object.  What kind of anisotropy does this appear to be?  Why? (Note that there are few observations in certain bins, so there may be some "missing" data).
+
+**Solution**
+
+## (e)
+
+Use REML to fit an omnidirectional spherical semivariogram model to the observed data.  Then fit a directional semivariogram model with `psiA = pi/2` and `psiR = 1`.  Make sure that the `psiA` and `psiR` parameters are not fixed during estimation for the second parameter.  For both models use initial values of 6000 for the partial sill, 50 for the range parameter, and 1000 for the nugget.  Note:  this will take a fair bit of time.  Which model should be preferred, in terms of AIC?
+
+**Solution**
+
+# Problem 3
+
+Write code to manually construct and plot an omnidirectional semivariogram for the oxford data.  Use 16 lag intervals and a distance upper bound of 600.  Some steps to do this:
+
+## (a)
+
+Create a matrix that describes the indices of all unique pairs of points $(1, 2), (1, 3), (1, N), (2, 3), .., (2, N), \ldots, (N-1, N)$. Each row should be a different pair.
+
+## (b)
+
+Compute the distances between all unique pairs of observed points.  The distances for the unique pairs should be stored in a vector (in the same order as 1). **Print the range of these distances.**
+
+## (c)
+
+Compute the squared difference between the responses for all unique pairs of points (in the same order as 1). **Print the range of the square response differences**.
+
+## (d)
+
+Determine the endpoints for your lag intervals/tolerance regions using a max distance of 600 and 16 bins. **Print the endpoints**.
+
+## (e)
+
+Use the `cut` function to bin the distances based on their associated tolerance region.
+
+## (f)
+
+Use the `tapply` function to average the distances in each bin using the labels from the cut function. **Print the results**.
+
+## (g)
+
+Use the `tapply` function to average the squared response differences in each bin using the labels from the cut function. Then divide by 2. **Print the results**.
+
+## (h)
+
+Plot the result of g (y-axis) vs the result of f (x-axis). Set the y-axis limits to be from 0 to 9000.

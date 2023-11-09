@@ -1,0 +1,327 @@
+---
+title: "Hw06 - Regional Count Data Homework (Spatial Autocorrelation)"
+format: html
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Problem 1
+
+The `nc.rda` file contains information related to SIDS cases in North Carolina. The object includes `nc.sids`, a spatial data frame compatible with the **sf** package with 20 variables measured for 100 counties. It contains data given in Cressie (1991, pp. 386-9), Cressie and Read (1985), and Cressie and Chan (1989) on sudden infant deaths in North Carolina for 1974-78 and 1979-84. The `nc.rda` objects also contains the neighbor list given by Cressie and Chan (1989) omitting self-neighbors (`nb89`), and the neighbor list given by Cressie and Read (1985) for contiguities (`nb85`). The `nc.sids` object contains the following variables:
+
+-   `SP_ID`: SpatialPolygons ID
+-   `CNTY_ID`: county ID
+-   `east`: eastings, county seat, miles, local projection
+-   `north`: northings, county seat, miles, local projection
+-   `L_id`: Cressie and Read (1985) L index
+-   `M_id`: Cressie and Read (1985) M index
+-   `names`: County names
+-   `AREA`: County polygon areas in degree units
+-   `PERIMETER`: County polygon perimeters in degree units
+-   `CNTY_` Internal county ID
+-   `NAME`: County names
+-   `FIPS`: County ID
+-   `FIPSNO`: County ID
+-   `CRESS_ID`: Cressie papers ID
+-   `BIR74`: births, 1974-78
+-   `SID74`: SID deaths, 1974-78
+-   `NWBIR74`: non-white births, 1974-78
+-   `BIR79`: births, 1979-84
+-   `SID79`: SID deaths, 1979-84
+-   `NWBIR79`: non-white births, 1979-84
+
+## (a)
+
+Use Moran's I to test whether there is evidence of positive spatial autocorrelation for the `SID74` variable under the normal assumption. Use a binary weights matrix for the `nb85` neighbor relationship.
+
+**Solution**
+
+```{r}
+library(spdep)
+library(sf)
+library(smerc)
+
+
+load(file="nc.rda")
+
+### moran's i
+# assume adjacency weights (w_ij = 1 if regions i and j share a boundary)
+# proximity matrix, B = binary adjacency matrix.  W is row standardized.
+w = nb2mat(nb85, style = "B")
+
+# see ?nb2listw for more options
+# proximaty matrix in list format
+lw = nb2listw(nb85, style = "B")
+
+# base test w/ normality approximation for p-value
+moran.test(nc.sids$SID74, listw = lw, randomisation = FALSE)
+
+
+```
+
+## (b)
+
+Use Moran's I to test whether there is evidence of positive spatial autocorrelation for the `SID74` variable under the randomization assumption. Use a binary weights matrix for the `nb85` neighbor relationship.
+
+**Solution**
+
+```{r}
+
+# base test w/ randomization approximation for p-value
+moran.mc(nc.sids$SID74, listw = lw, nsim=499)
+
+```
+
+## (c)
+
+Use the Moran's I statsitic to test whether there is evidence of positive spatial autocorrelation for the `SID74` variable under the CRH. Note: use the standard Moran's I statistic, but use a Monte Carlo test to test the constant risk hypothesis. Use a binary weights matrix for the `nb85` neighbor relationship and 499 simulated data sets. Use the `BIR74` variable for the population size of each region.
+
+**Solution**
+
+```{r}
+# base test w/ Monto Carlo p-value, simulating data under constant risk hypothesis
+# some preliminaries
+N = length(nc.sids$SID74) # number of regions
+y = nc.sids$SID74 # number of cases
+n = nc.sids$BIR74 #population sizes
+r <- sum(y)/sum(n) # estimated risk
+rni <- r * n # expected per region
+
+# observed moran's statistic
+nsim = 499
+t0 = moran(y, listw = lw, n = N, S0 = Szero(lw))$I
+# simulate data under CRH
+tsim = numeric(nsim)
+# calculate moran's i for poisson data simulated under crh
+for (i in 1:nsim) {
+  tsim[i] = moran(rpois(N, rni), listw = lw, n = N, S0 = Szero(lw))$I
+}
+
+# p-value for moran's i constant risk monte carlo test
+(sum(tsim >= t0) + 1)/(nsim + 1)
+
+```
+
+## (d)
+
+Use the constant risk version of Moran's I (Walter 1992) to test whether there is evidence of positive spatial autocorrelation for the `SID74` variable under the CRH. Use a binary weights matrix for the `nb85` neighbor relationship and 499 simulated data sets. Use the `BIR74` variable for the population size of each region.
+
+**Solution**
+
+```{r}
+
+smerc::morancr.test(y, pop = n, w = w)
+
+```
+
+## (e)
+
+How does the Moran's I result change if we use the constant risk version of Moran's I along with the constant risk hypothesis (instead of the standard Moran's I statistic with the CRH)? Why does this change occur?
+
+**Solution**
+
+> While our conclusion does not change between the standard Moran's I and the constant risk version, we do see a difference between the test statistic's value. This is due to the fact that the standard Moran's I does not account for the spatial heterogeneity of regional at-risk population sizes often found in public health data. In other words, any evidence of autocorrelation identified with the standard Moran's I could just be due to relationships between population sizes.
+
+## (f)
+
+The intercentroid distances for the North Carolina data are between 0.12 and 8.22 units. In the context of Tango's recommended weights matrix, a very weak spatial correlation has $\kappa=0.1$ and a very strong spatial correlation has $\kappa=7$. Perform Monte Carlo tests using using Tango's index with Tango's recommended weights with both $\kappa=0.1$ and $\kappa=7$ for the `SID74` variable with 499 simulated data sets. For the centroid coordinates, use the `east` and `north` columns of `nc.sids`. Interpret your results in the context of the problem.
+
+**Solution**
+
+```{r}
+
+coords = as.matrix(cbind(nc.sids$east,nc.sids$north))
+cases = nc.sids$SID74
+pop = nc.sids$BIR74
+
+# Find distance matrix
+d = as.matrix(dist(coords))
+
+##################################################
+# Exponential decay weight matrix
+# use different kappas in defining weights
+w1  <- dweights(coords, kappa = .1)
+w7  <- dweights(coords, kappa = 7)
+
+tango_1  <- tango.test(cases, pop, w1,nsim = 499)
+tango_7  <- tango.test(cases, pop, w7, nsim = 499)
+
+tango_1
+tango_7
+
+
+```
+
+> The monte carlo p-value and the positive sign of the index implies that there is evidence of clustering at both small and large scales (k=.1 and k=7).
+
+## (g)
+
+Compare the goodness-of-fit and spatial autocorrelation components of Tango's statistic for the observed and simulated data in a plot. (Do this for both values of $\kappa$). Are the patterns similar for the weak versus strong spatial autocorrelation? Or does the value of $\kappa$ dramatically impact the relative importance of the goodness-of-fit and spatial autocorrelation components?
+
+**Solution**
+
+```{r}
+
+plot(tango_1)
+plot(tango_7)
+```
+
+> The plots show that for k=0.1 there is evidence of a poor fit or weak autocorrelation while the k=7 plot indicates evidence of strong autocorrelation. It appears that the value of kappa dramatically impacts the relative importance of the two components.
+
+# Problem 2
+
+In this problem you are going to implement a portion of the spatial scan method. You can only use functions/packages loaded with by default by R (`stats`, `graphics`, `grDevices`, `utils`, `datasets`, `methods`, `base`). If you don't have to load a package to access the functionality, then you should be okay.
+
+Suppose you have regional count data with the following characteristics:
+
+```{r}
+#| include: false
+region_id <- seq_len(4)
+x <- c(1, 1, 2, 1.75)
+y <- c(2, 1, 2.01, 1.75)
+cases <- c(1, 2, 3, 2)
+pop <- c(5, 3, 8, 4)
+dtf <- data.frame(region_id, x, y, cases, population = pop)
+```
+
+```{r}
+#| echo: false
+knitr::kable(dtf)
+```
+
+(`x`, `y`) define the centroid of each region.
+
+Calculate the Poisson spatial scan statistic under the CRH assuming the constraint that no more than half the total population can be in a potential cluster/window.
+
+Break up your solution into parts:
+
+## (a)
+
+Compute the inter-centroid distance matrix between all centroids. Return the sample mean of this matrix.
+
+**Solution**
+
+```{r}
+
+
+coords = as.matrix(cbind(dtf$x,dtf$y))
+cases = dtf$cases
+pop = dtf$population
+
+# Find distance matrix
+d = as.matrix(dist(coords))
+mean(d)
+
+```
+
+## (b)
+
+Using the distance matrix above, determine all possible windows (in terms of the region ids each window includes) in terms of nearest neighbors (the largest would have 3 non-inclusive neighbors). Print the complete list of windows.
+
+**Solution**
+
+```{r}
+
+od = apply(d,FUN=order,MARGIN=1)
+N=length(dtf$region_id)
+
+for (i in 1:N){
+  t1_mask = od[i,]<=2
+  t2_mask = od[i,]<=3
+  t3_mask = od[i,]<=4
+  nn1 = dtf$region_id[t1_mask]
+  nn2 = dtf$region_id[t2_mask]
+  nn3 = dtf$region_id[t3_mask]
+  temp_w <- list(nn1,nn2,nn3)
+  dtf$windows[i] = temp_w
+}
+dtf$windows
+```
+
+## (c)
+
+Determine the population size of each window to identify which windows have less than 50% of the total population. Print the population of each window
+
+**Solution**
+
+```{r}
+for (i in 1:N){
+  window_pop = sum(subset(dtf,region_id %in% dtf$windows[[i]])$population)
+  dtf$win_pop[i] = window_pop
+}
+
+dtf$win_pop
+
+```
+
+## (d)
+
+Only retain the windows that satisfy the population constraint. Print the list of retained windows.
+
+**Solution**
+
+```{r}
+
+total_pop = sum(dtf$population)
+keep_mask = dtf$win_pop<(total_pop/2)
+final_windows = dtf$windows[keep_mask]
+final_windows
+
+```
+
+## (e)
+
+For each remaining window, compute $Y_{in}$, $Y_{out}$, $E_{in}$, $E_{out}$. Print a data frame/matrix with the columns $Y_{in}$, $Y_{out}$, $E_{in}$, $E_{out}$.
+
+**Solution**
+
+```{r}
+
+df_result = data.frame(y_in=numeric(0),y_out=numeric(0),e_in=numeric(0),e_out=numeric(0))
+r = sum(dtf$cases)/sum(dtf$population)
+
+for (i in 1:length(final_windows)){
+  w = final_windows[i]
+  dfw = subset(dtf,region_id %in% w)
+  y_in = sum(dfw$cases)
+  y_out  = sum(dtf$cases) - y_in
+  e_in = sum(dfw$win_pop)*r
+  e_out = (sum(dtf$population)-sum(dfw$win_pop))*r
+  temp_row = list(y_in,y_out,e_in,e_out)
+  df_result[i,] = temp_row
+}
+df_result
+
+```
+
+## (f)
+
+Compute the statistic $\left(\frac{Y_{in}}{E_{in}}\right)^{Y_{in}} \left(\frac{Y_{out}}{E_{out}}\right)^{Y_{out}} I\left(\frac{Y_{in}}{E_{in}} \geq \frac{Y_{out}}{E_{out}}\right)$ for each remaining window.
+
+**Solution**
+
+```{r}
+
+for (i in 1:(length(final_windows))){
+  y1 = df_result[i,1]
+  y0 = df_result[i,2]
+  e1 = df_result[i,3]
+  e0 = df_result[i,4]
+  ind <- if(e1==0) 0 else ((y1/e1 >= y0/e0))
+  t_in = (y1/e1)^y1
+  t_out = (y0/e0)^y0
+  if (ind){
+    tstat = t_in*t_out
+  }else{
+    tstat=0
+  }
+  df_result$tstat[i] = tstat
+}
+
+df_result
+
+
+```
