@@ -1,41 +1,22 @@
-# install.packages(c("gstat", "geoR", "rgdal", "sp", "gridExtra", "sf", "colorspace"))
+# install.packages(c("gstat", "geoR", "sf"))
 library(gstat) # for most of the work
-library(sp)
-library(rgdal)
+library(sf)
 
 ### some notes
-# a dataframe (df) can be turned into a SpatialPointsDataFrame
-# using the command coordinates(df) <- c("x", "y") where
-# x and y are the names of the x and y coordinate in df.
-
-# the spplot function takes a SpatialPointsDataFrame or a
-# the variogram function requires a gstat object, which
-# can be created using the gstat function
-
-# the predict function (to perform kriging) takes
-# a gstat object that includes a variogram model
-
 # the variogram functions for the gstat package parameterize
 # the direction in degrees.  the variogram functions for the
 # geoR package function the variogram functions in radians,
 # where radians = degrees/180*pi
 
-# projections for data and prediction locations must match
-
-# turn smoky dataframe into SpatialPointsDataFrame by adding coordinates
+# turn smoky into sf dataframe
 load("./data/smoky.rda")
-coordinates(smoky) <- c("longitude", "latitude")
-
-# read polygon of data
-poly = rgdal::readOGR("./data/smoky/smokypoly.shp")
-proj4string(poly)
-proj4string(smoky) #coordinate reference systems don't match!
-proj4string(poly) = CRS(proj4string(smoky))
+smoky <- sf::st_as_sf(smoky,
+                      coords = c("longitude", "latitude"))
 
 ### Fig 8.4 create bubble plot of smoky pH
-# place legend on right, change default colors with col.regions
-spplot(smoky, "ph", key.space = "right", cuts = 10,
-       col.regions = hcl.colors(11))
+# change default colors with pal
+# change point style with pch
+plot(smoky["ph"], nbreaks = 10, pal = hcl.colors, pch = 20)
 
 # create gstat object for further analysis
 # formula ph ~ 1 assumes a constant mean over the spatial domain
@@ -56,7 +37,8 @@ variog2$np # gstat
 
 ### Table 8.1 fit variogram model using WRSS
 # estimated exponential model with starting values c = .25, a = 30, c0 = .05
-fitexp = fit.variogram(variog2, vgm(.25, "Exp", 30, .05),
+fitexp = fit.variogram(variog2,
+                       vgm(.25, "Exp", 30, .05),
                        fit.method = 2)
 fitexp #c = 0.214, a = 22.55, c0 = 0.0138
 # plot variogram with estimated exponential model
@@ -77,14 +59,21 @@ attr(fitsph, "SSErr")
 
 ### fit variogram model using WRSS
 # estimated matern model with starting values c = .25, a = 30, c0 = .05, smoothness = 1
-fitmat = fit.variogram(variog2, vgm(.25, "Sph", 30, .05, kappa = 1), fit.method = 2,
+fitmat = fit.variogram(variog2,
+                       vgm(psill = .25,
+                           model = "Mat",
+                           range = 30,
+                           nugget = .05,
+                           kappa = 1.5),
+                       fit.method = 2,
                        fit.kappa = TRUE)
-fitmat #c = 0.17, a = 63.33, c0 = 0.05
-# plot variogram with estimated spherical model
-plot(variog2, fitmat, main = "WRSS spherical fit")
+fitmat #c = 0.214, a = 22.54, c0 = 0.014, kappa = 0.5
+# plot variogram with estimated matern model
+plot(variog2, fitmat, main = "WRSS matern fit")
+# equivalent to exponential!
 # wrss of fit
 attr(fitmat, "SSErr")
-# the WRSS = 15.9
+# the WRSS = 19.87
 
 ### Fig 8.11
 # plot directional variogram
@@ -93,10 +82,12 @@ variog3 = variogram(gsmoky, alpha = c(70, 115, 160, 205))
 plot(variog3)
 
 ### Fig 8.12
-# show fit of anisotropic model
-# the numbers come from output of the likfit function from the geoR package
-# note that likfit parameterized a parameter in terms of aminor, not amajor
-# so we have to convert it to amaj (amin * psiR).  We need to convert the ratio in anis
-# to the minor/major ratio, i.e., 1/psiR
-vgmaniso = vgm(.188, "Exp", 10.82*1.91, .0016, anis = c(70, 1/1.91))
+# show fit of anisotropic model the numbers come from output
+# of the likfit function from the geoR package note that
+# likfit parameterized a parameter in terms of aminor, not
+# amajor so we have to convert it to amaj (amin * psiR).  We
+# need to convert the ratio in anis to the minor/major
+# ratio, i.e., 1/psiR
+vgmaniso = vgm(.188, "Exp", 10.82*1.91, .0016,
+               anis = c(70, 1/1.91))
 plot(variog3, vgmaniso)
