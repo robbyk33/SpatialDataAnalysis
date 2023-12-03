@@ -1,115 +1,481 @@
 ---
 title: "Hw07 - Geostatistics Homework (Spatial Dependence)"
-format: pdf
+format: html
 ---
 
 The `ox.rda` file contains 126 soil augerings on a 100 x 100m square grid, with 6 columns and 21 rows. Grid is oriented with long axis North-north-west to South-south-east Origin of grid is South-south-east point, 100m outside grid.
 
 The original data are part of a soil survey carried out by P.A. Burrough in 1967. The survey area is located on the chalk downlands on the Berkshire Downs in Oxfordshire, UK. The data frame contains the following variables:
 
-- `x`: x-coordinate, field, non-projected.
-- `y`: y-coordinate, field, non-projected.
-- `k`: K (potassium), 0-20 cm, ppm.
+-   `x`: x-coordinate, field, non-projected.
+-   `y`: y-coordinate, field, non-projected.
+-   `k`: K (potassium), 0-20 cm, ppm.
 
 These data are a subset of the `oxford` data set contained in the **gstat** package.
 
 Load the `ox` data frame.
 
+```{r}
+library(gstat)
+library(geoR)
+
+load('ox.rda')  # load data
+ox_sf <- sf::st_as_sf(ox,coords=c('x','y'))  # create sf object
+
+gsox <-  gstat(id = "k", formula = k ~ 1, data = ox_sf)
+
+grox <- as.geodata(cbind(ox$x, ox$y, ox$k))
+```
+
 Then:
 
-1. Use the `ox` data frame to create an `sf` object using `x` and `y` as coordinates.
-2. Use the `sf` `data.frame` to construct a `gstat` object using `k` as the response with a constant mean. 
-3. Construct a `geodata` object (from the **geoR** package) with `k` as the response.
+1.  Use the `ox` data frame to create an `sf` object using `x` and `y` as coordinates.
+2.  Use the `sf` `data.frame` to construct a `gstat` object using `k` as the response with a constant mean.
+3.  Construct a `geodata` object (from the **geoR** package) with `k` as the response.
 
-# Problem 1 
+# Problem 1
 
 Create a bubble plot of the observed data using 10 bins from 0 to 10 in increments of 1.
 
 **Solution**
 
+```{r}
+plot(ox_sf["k"], nbreaks = 10, pal = hcl.colors, pch = 20)
+
+```
+
 # Problem 2 (Using **gstat**)
 
 ## (a)
 
-Create a `gstat` variogram object.  The cutoff distance should be 600.  The width of each lag interval should be the cutoff distance divided by 16.  Plot this object.  Does the semivariogram seem to have a well-defined structure?  If so, what are the sill, nugget effect, and range, approximately?
+Create a `gstat` variogram object. The cutoff distance should be 600. The width of each lag interval should be the cutoff distance divided by 16. Plot this object. Does the semivariogram seem to have a well-defined structure? If so, what are the sill, nugget effect, and range, approximately?
 
 **Solution**
+
+```{r}
+
+# compute empirical semivariogram
+vhat = variogram(gsox, cutoff = 600, width = 600/16)
+plot(vhat)
+
+
+```
+
+> The semivariogram has some definition and we can identify the nugget effect as about 6400, the sill appears to be just over 8000, and the range looks to be about 200.
 
 ## (b)
 
-Fit exponential, spherical, and Matern semivariogram models to the empirical semivariogram in (a) using WRSS.  Use `fit.kappa = TRUE` for the Matern model to estimate the associated smoothness parameter.
+Fit exponential, spherical, and Matern semivariogram models to the empirical semivariogram in (a) using WRSS. Use `fit.kappa = TRUE` for the Matern model to estimate the associated smoothness parameter.
 
-Use a table to summarize the estimated partial sill, range parameter, and nugget for each model.  What is the estimated smoothness parameter for the Matern model?
+Use a table to summarize the estimated partial sill, range parameter, and nugget for each model. What is the estimated smoothness parameter for the Matern model?
 
 **Solution**
+
+```{r}
+# declaring an empty data frame 
+result <- data.frame(model = character(), 
+                 psill = double(), 
+                 range = double(),
+                 wrss = double(),
+                 stringsAsFactors = FALSE) 
+  
+# print the data frame 
+# str(df)
+# result = as.data.frame(colnames(list('model','psill','range','wrss')))
+# exponential
+fitexp = fit.variogram(vhat,
+                       vgm( "Exp", range=200, nugget=6400),
+                       fit.method = 2)
+
+plot(vhat, fitexp, main = "WRSS exponential fit")
+
+rss1 = attr(fitexp, "SSErr") # wrss of fit
+
+result[1,"model"] = "Exp"
+result[1,"psill"] = fitexp[2,"psill"]
+result[1,"range"] = fitexp[2,"range"]
+result[1,"wrss"] = rss1
+# result$wrss[1] = rss1
+
+# spherical
+fitsphere = fit.variogram(vhat,
+                       vgm(1600, "Sph", 200, 6400),
+                       fit.method = 2)
+
+plot(vhat, fitsphere, main = "Spherical")
+
+rss2 = attr(fitsphere, "SSErr") # wrss of fit
+
+result[2,"model"] = "Sph"
+result[2,"psill"] = fitsphere[2,"psill"]
+result[2,"range"] = fitsphere[2,"range"]
+result[2,"wrss"] = rss2
+# result$wrss[2] = rss2
+
+# matern
+fitmat = fit.variogram(vhat,
+                       vgm(1600, "Mat", 200, 6400),
+                       fit.method = 2,fit.kappa = TRUE)
+
+plot(vhat, fitmat, main = "Matern")
+
+rss3 = attr(fitmat, "SSErr") # wrss of fit
+
+result[3,"model"] = "Mat"
+result[3,"psill"] = fitmat[2,"psill"]
+result[3,"range"] = fitmat[2,"range"]
+result[3,"wrss"] = rss3
+# result$wrss[3] = rss3
+
+result
+
+```
+
+> the estimated smoothness for the Matern model is 0.107
 
 ## (c)
 
-In one plot, overlay each fitted variogram model from (c) to the empirical semivariogram found in (b).  Note: You will need to extract the relevant information from your gstat variogram object.  Also, you will probably want to use the `variogramLine` function to obtain values for the theoretical models of each fitted model.  Use this information to construct a single plot with the empirical semivariogram and the fitted models, making sure to label each model properly.
+In one plot, overlay each fitted variogram model from (c) to the empirical semivariogram found in (b). Note: You will need to extract the relevant information from your gstat variogram object. Also, you will probably want to use the `variogramLine` function to obtain values for the theoretical models of each fitted model. Use this information to construct a single plot with the empirical semivariogram and the fitted models, making sure to label each model properly.
 
 **Solution**
+
+```{r}
+library(ggplot2)
+
+vhat = variogram(gsox, cutoff = 600, width = 600/16)
+exp_line = variogramLine(fitexp,maxdist = max(vhat$dist))
+sph_line = variogramLine(fitsphere,maxdist = max(vhat$dist))
+mat_line = variogramLine(fitmat,maxdist = max(vhat$dist))
+
+
+ggplot()+
+  geom_point(vhat, mapping=aes(x=dist,y=gamma,color='red'))+
+  geom_line(exp_line,mapping=aes(x=dist,y=gamma,color='darkgreen'))+
+  geom_line(sph_line,mapping=aes(x=dist,y=gamma,color='orange'))+
+  geom_line(mat_line,mapping=aes(x=dist,y=gamma,color='darkblue'))+
+  scale_colour_manual(name = 'Variogram Model',aesthetics = "color",
+                      values=c('red'='red',
+                               'darkgreen'='darkgreen',
+                               'orange'='orange',
+                               'darkblue'='darkblue'),
+                      labels = c('Mat','Exp','Sph','vhat'))
+
+
+
+```
 
 # Problem 3 (Using **geoR**)
 
 ## (a)
 
-Use the geoR `variog` function to create an empirical semivariogram.  The `max.dist` value should be the same as the cutoff from Problem 2.  Use 20 lag intervals.  Plot this object.
+Use the geoR `variog` function to create an empirical semivariogram. The `max.dist` value should be the same as the cutoff from Problem 2. Use 20 lag intervals. Plot this object.
 
 **Solution**
 
+```{r}
+library(geoR)
+
+# load smoky dataframe
+load("ox.rda")
+
+# create geodata object for geoR
+geox = as.geodata(cbind(ox$x, ox$y, ox$k))
+
+# estimated semivariogram
+vhat2 = variog(geox, max.dist = 600, uvec = 20)
+plot(vhat2)
+
+```
+
 ## (b)
-(Fit exponential, spherical, and Matern variogram models to empirical semivariogram in (a) using WRSS.  Use `fix.kappa = FALSE` for the Matern model to estimate the associated smoothness parameter.  Use a table to summarize the estimated partial sill, range parameter, and nugget for each model.  Provide plots of each fitted variogram model to the empirical variogram.  What is the estimated smoothness parameter for the Matern model?
+
+(Fit exponential, spherical, and Matern variogram models to empirical semivariogram in (a) using WRSS. Use `fix.kappa = FALSE` for the Matern model to estimate the associated smoothness parameter. Use a table to summarize the estimated partial sill, range parameter, and nugget for each model. Provide plots of each fitted variogram model to the empirical variogram. What is the estimated smoothness parameter for the Matern model?
+
+```{r}
+
+result2 <- data.frame(model = character(), 
+                 psill = double(), 
+                 range_param = double(),
+                 wrss = double(),
+                 stringsAsFactors = FALSE)
+
+# fit exponential model using geoR package
+fitexp = variofit(vhat2, ini.cov.pars = c(1600, 200),
+                  nugget = 6400,
+                  cov.model = "exponential",
+                  )
+
+exp_params1 <- fitexp$cov.pars 
+exp_c0 <- fitexp$nugget 
+exp_wrss <- fitexp$value/2 
+
+result2[1,"model"] = "Exp"
+result2[1,"psill"] = exp_params1[[1]]
+result2[1,"range_param"] = exp_params1[[2]]
+result2[1,"wrss"] = exp_wrss
+
+# fit spherical model using geoR package
+fit_sph = variofit(vhat2, ini.cov.pars = c(1600, 200),
+                  nugget = 6400,
+                  cov.model = "spherical",
+                  )
+
+sph_params1 <- fit_sph$cov.pars 
+sph_c0 <- fit_sph$nugget 
+sph_wrss <- fit_sph$value/2 
+
+result2[2,"model"] = "Sph"
+result2[2,"psill"] = sph_params1[[1]]
+result2[2,"range_param"] = sph_params1[[2]]
+result2[2,"wrss"] = sph_wrss
+
+# fit matern model
+fit_mat = variofit(vhat2, ini.cov.pars = c(1600, 200),
+                  nugget = 6400,
+                  cov.model = "matern",
+                  fix.kappa = FALSE
+                  )
+mat_params1 <- fit_mat$cov.pars 
+mat_c0 <- fit_mat$nugget 
+mat_wrss <- fit_mat$value/2 
+
+result2[3,"model"] = "Exp"
+result2[3,"psill"] = mat_params1[[1]]
+result2[3,"range_param"] = mat_params1[[2]]
+result2[3,"wrss"] = mat_wrss
+```
 
 ## (c)
 
-In one plot, overlay each fitted variogram model from (b) to the empirical semivariogram found in (a).  Making sure to label each model properly.
+In one plot, overlay each fitted variogram model from (b) to the empirical semivariogram found in (a). Making sure to label each model properly.
 
 **Solution**
+
+```{r}
+
+plot(vhat2$u,vhat2$v,col='red')
+geoR:::lines.variomodel.variofit(fitexp,col='green')
+geoR:::lines.variomodel.variofit(fit_sph,col='blue')
+geoR:::lines.variomodel.variofit(fit_mat,col='orange')
+
+
+
+
+```
 
 ## (d)
 
-Use the `variog4` function to create a directional semivariogram (using the default direction).  Set `maxdist` to be 600. Use 10 bins. Plot this object.  What kind of anisotropy does this appear to be?  Why? (Note that there are few observations in certain bins, so there may be some "missing" data).
+Use the `variog4` function to create a directional semivariogram (using the default direction). Set `maxdist` to be 600. Use 10 bins. Plot this object. What kind of anisotropy does this appear to be? Why? (Note that there are few observations in certain bins, so there may be some "missing" data).
 
 **Solution**
 
+```{r}
+
+dv <- variog4(geox,uvec=10,max.dist = 600)
+plot(dv)
+
+```
+
+> from the plot, it appears to be geometric anisotropy because the directional semivariograms have approximately the same shape and sill but it is hard to compare the range between orthogonal directions, which would help with the second condition for geometric anisotropy - that the range in one direction has the max range and the range of the perpendicular direction would be the min range.
+
 ## (e)
 
-Use REML to fit an omnidirectional spherical semivariogram model to the observed data.  Then fit a directional semivariogram model with `psiA = pi/2` and `psiR = 1`.  Make sure that the `psiA` and `psiR` parameters are not fixed during estimation for the second parameter.  For both models use initial values of 6000 for the partial sill, 50 for the range parameter, and 1000 for the nugget.  Note:  this will take a fair bit of time.  Which model should be preferred, in terms of AIC?
+Use REML to fit an omnidirectional spherical semivariogram model to the observed data. Then fit a directional semivariogram model with `psiA = pi/2` and `psiR = 1`. Make sure that the `psiA` and `psiR` parameters are not fixed during estimation for the second parameter. For both models use initial values of 6000 for the partial sill, 50 for the range parameter, and 1000 for the nugget. Note: this will take a fair bit of time. Which model should be preferred, in terms of AIC?
 
 **Solution**
 
 # Problem 3
 
-Write code to manually construct and plot an omnidirectional semivariogram for the oxford data.  Use 16 lag intervals and a distance upper bound of 600.  Some steps to do this:
+Write code to manually construct and plot an omnidirectional semivariogram for the oxford data. Use 16 lag intervals and a distance upper bound of 600. Some steps to do this:
 
 ## (a)
 
 Create a matrix that describes the indices of all unique pairs of points $(1, 2), (1, 3), (1, N), (2, 3), .., (2, N), \ldots, (N-1, N)$. Each row should be a different pair.
 
+```{r}
+
+
+# get x and y vectors, combine into 2d Array
+vx <- ox$x
+vy <- ox$y
+v <- cbind(vx,vy)
+
+# look at uniqe values for x and y
+N=length(unique(vx))
+Z = length(unique(vy))
+# N =10
+
+# empty data.frame to store results
+v_list = data.frame()
+
+# instantiate index parameter
+index = 1
+
+# loop through N-1 and generate index points for each unique (x,y) combination
+for (i in 1:(N-1)){
+  u = 1
+  while (i+u<=Z){
+    v_list[index,1] = i
+    v_list[index,2] = i+u
+    u = u+1
+    index=index+1
+  }
+}
+
+# convert to matrix and view
+v_mat = as.matrix(x=v_list,nrow=index-1,ncol=2)
+v_mat
+```
+
 ## (b)
 
-Compute the distances between all unique pairs of observed points.  The distances for the unique pairs should be stored in a vector (in the same order as 1). **Print the range of these distances.**
+Compute the distances between all unique pairs of observed points. The distances for the unique pairs should be stored in a vector (in the same order as 1). **Print the range of these distances.**
+
+```{r}
+
+dv <- as.matrix(apply(v,FUN=dist,MARGIN=1))
+range(dv)
+
+
+```
 
 ## (c)
 
 Compute the squared difference between the responses for all unique pairs of points (in the same order as 1). **Print the range of the square response differences**.
 
+```{r}
+
+# the following assumes we are referring to the y value as our "response"
+
+# u_vy <- as.matrix(unique(vy))
+uv <- as.matrix(unique(v))
+responses = as.matrix(uv[,2])
+
+#result df
+r_mat <- data.frame()
+# set index
+idx = 1
+
+for (u in responses){
+  # t_mask = which(uv[,1]==u)
+  
+  r = sapply(responses,FUN="-",u)
+  r2 = r^2
+  
+  # td = apply(uv[t_mask,],FUN=function(x){
+  #   r = dist(x)
+  #   r2 = r^2
+  #   return(r2)
+  # },MARGIN=1)
+  # print(as.matrix(td))
+  r_mat[idx,1:length(r2)] = r2
+  idx=idx+1
+
+}
+
+range(r_mat)
+
+
+
+```
+
 ## (d)
 
 Determine the endpoints for your lag intervals/tolerance regions using a max distance of 600 and 16 bins. **Print the endpoints**.
+
+```{r}
+
+hmin = min(dv)
+hmax = max(dv)
+hlim = 600
+n_bins = 16
+lag = (hmax-hmin)/n_bins
+
+a=hmin
+endpoints = data.frame()
+for (b in 1:n_bins){
+  endpoints[b,1] = a
+  endpoints[b,2] = a+lag
+  a=a+lag
+}
+as.matrix(endpoints)
+```
 
 ## (e)
 
 Use the `cut` function to bin the distances based on their associated tolerance region.
 
+```{r}
+
+bin_factors = cut(x=dv,breaks=endpoints[,1],include.lowest = TRUE)
+
+```
+
 ## (f)
 
 Use the `tapply` function to average the distances in each bin using the labels from the cut function. **Print the results**.
+
+```{r}
+
+dt <- data.frame(
+  dist=dv,
+  points=v,
+  bins=bin_factors
+)
+
+db <- tapply(dt$dist,bin_factors,mean)
+
+as.matrix(db)
+
+
+
+```
 
 ## (g)
 
 Use the `tapply` function to average the squared response differences in each bin using the labels from the cut function. Then divide by 2. **Print the results**.
 
+```{r}
+
+# i spent way too long trying to get this right..
+# i think I am not understanding how to use the square diff responses
+# from before so i just did it all here
+
+rd <- data.frame()
+idx = 1
+
+
+
+for (x in endpoints[,2]){
+  m = which(v[,1]<=x)
+  td = v[m,]
+  r = apply(td,"-",MARGIN=2)
+  r2 = r^2
+  mx = mean(r2)/2
+  rd[idx,1]=x
+  rd[idx,2]=mx
+  idx= idx+1
+  
+}
+
+as.matrix(rd)
+# responses
+# 
+# sqd <- tapply(r_mat,bin_factors,mean)
+# 
+# sqd
+
+
+```
+
 ## (h)
 
 Plot the result of g (y-axis) vs the result of f (x-axis). Set the y-axis limits to be from 0 to 9000.
+
+```{r}
+
+# if I set y-axis limit to 9000 then the plot will not show.
+# i imagine this is because my response variable is not being measured correctly.
+
+plot(rd)
+```

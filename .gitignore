@@ -9,4 +9,9 @@ kdenv.rda
 renv350.rda
 renv700.rda
 *.rda
+*.png
+*.PNG
+*.xlsx
+.RData
+projectdata
 >>>>>>> 3130ef33c61d44190e4097be0965c189f04c6c55

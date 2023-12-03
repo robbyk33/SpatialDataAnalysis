@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Hw08 - Geostatistics Homework (Prediction)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="geo-hw-pred-v2_files/libs/clipboard/clipboard.min.js"></script>
+<script src="geo-hw-pred-v2_files/libs/quarto-html/quarto.js"></script>
+<script src="geo-hw-pred-v2_files/libs/quarto-html/popper.min.js"></script>
+<script src="geo-hw-pred-v2_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="geo-hw-pred-v2_files/libs/quarto-html/anchor.min.js"></script>
+<link href="geo-hw-pred-v2_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="geo-hw-pred-v2_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="geo-hw-pred-v2_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="geo-hw-pred-v2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="geo-hw-pred-v2_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Hw08 - Geostatistics Homework (Prediction)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>The <code>cow.rda</code> file contains a data frame with 200 spatial observations observed throughout the state of Colorado. The data frame includes <code>easting</code> and <code>northing</code> coordinates (UTM, scaled by 1000 meters) and Tungsten measurements (<code>W</code>) at each site (mg/kg). Read in the data as a data frame from the file.</p>
+<section id="preliminaries" class="level1">
+<h1>Preliminaries</h1>
+<p>Load the <strong>gstat</strong> and <strong>geoR</strong> packages. Load the <code>cow.rda</code> file.</p>
+</section>
+<section id="problem-0" class="level1">
+<h1>Problem 0</h1>
+<p>Create <code>cow_sf</code>, an <code>sf</code> version of <code>cow</code> that uses <code>easting</code> and <code>northing</code> for <code>coords</code>.</p>
+<p>Create <code>geocow</code>, a <code>geodata</code> object from the <strong>geoR</strong> package.</p>
+<p>Also run the following code.</p>
+<p><strong>Solution</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gstat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'gstat' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,
+which was just loaded, will retire in October 2023.
+Please refer to R-spatial evolution reports for details, especially
+https://r-spatial.org/r/2023/05/15/evolution4.html.
+It may be desirable to make the sf package available;
+package maintainers should consider adding sf to Suggests:.
+The sp package is now running under evolution status 2
+     (status 2 uses the sf package in place of rgdal)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geoR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>--------------------------------------------------------------
+ Analysis of Geostatistical Data
+ For an Introduction to geoR go to http://www.leg.ufpr.br/geoR
+ geoR version 1.9-2 (built on 2022-08-09) is now loaded
+--------------------------------------------------------------</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">'cow.rda'</span>)  <span class="co"># load data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cow_sf <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_as_sf</span>(cow,<span class="at">coords=</span><span class="fu">c</span>(<span class="st">'easting'</span>,<span class="st">'northing'</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>geocow <span class="ot">&lt;-</span> <span class="fu">as.geodata</span>(<span class="fu">cbind</span>(cow<span class="sc">$</span>easting, cow<span class="sc">$</span>northing, cow<span class="sc">$</span>W))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>poly_sf <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_polygon</span>(<span class="at">x =</span> <span class="fu">list</span>(<span class="fu">cbind</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">152</span>, <span class="dv">152</span>, <span class="dv">753</span>, <span class="dv">753</span>, <span class="dv">152</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">4100</span>, <span class="dv">4544</span>, <span class="dv">4544</span>, <span class="dv">4100</span>, <span class="dv">4100</span>))))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>grid_sf <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_sample</span>(poly_sf, <span class="at">size =</span> <span class="dv">100</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">type =</span> <span class="st">"regular"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="problem-1-using-geor" class="level1">
+<h1>Problem 1 (Using geoR)</h1>
+<p>Use REML estimation with a constant mean function to fit the following covariance models to the data:</p>
+<ol type="a">
+<li>An isotropic spherical model.</li>
+<li>A geometric anisotropic spherical model.</li>
+<li>An isotropic exponential model.</li>
+<li>A geometric anisotropic exponential model.</li>
+</ol>
+<p>Make a table that provides the following information about each model: model, partial sill (<span class="math inline">\(c\)</span>), range parameter (<span class="math inline">\(a\)</span> or <span class="math inline">\(a_{min}\)</span>), nugget (<span class="math inline">\(c_0\)</span>), direction of the major axis in degrees, (if appropriate), anisotropy ratio <span class="math inline">\(a_{max}/a_{min}\)</span>, AIC of the fit.</p>
+<p>Note: starting values make a HUGE difference for the anisotropic models, so you probably want to experiment a bit.</p>
+<p>Which model is the best choice?</p>
+<p><strong>Solution</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimated directional semivariogram</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># directions = c(0, 45, 90, 135)/180*pi</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># directions = c(15, 60, 105, 150)/180*pi</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>directions <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">70</span>, <span class="dv">115</span>, <span class="dv">160</span>)<span class="sc">/</span><span class="dv">180</span><span class="sc">*</span>pi</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># directions = c(35, 80, 125, 170)/180*pi</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>vhat <span class="ot">=</span> <span class="fu">variog4</span>(geocow,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">direction =</span> directions,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">max.dist =</span> <span class="dv">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>variog: computing variogram for direction = 25 degrees (0.436 radians)
+        tolerance angle = 22.5 degrees (0.393 radians)
+variog: computing variogram for direction = 70 degrees (1.222 radians)
+        tolerance angle = 22.5 degrees (0.393 radians)
+variog: computing variogram for direction = 115 degrees (2.007 radians)
+        tolerance angle = 22.5 degrees (0.393 radians)
+variog: computing variogram for direction = 160 degrees (2.793 radians)
+        tolerance angle = 22.5 degrees (0.393 radians)
+variog: computing omnidirectional variogram</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(vhat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="geo-hw-pred-v2_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># choose starting a_min</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># amin &lt;- directions[1]</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>amin <span class="ot">&lt;-</span> directions[<span class="dv">2</span>]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># amin &lt;- directions[3]</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># amin &lt;- directions[4]</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>fix_angle <span class="ot">=</span> <span class="cn">FALSE</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>model_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="do">#########################</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># isotropic spherical</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>iso_fitsph <span class="ot">=</span> <span class="fu">likfit</span>(geocow,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ini.cov.pars =</span> <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="dv">100</span>),</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nugget =</span> <span class="dv">0</span>,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cov.model =</span> <span class="st">"spherical"</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                  <span class="at">lik.method =</span> <span class="st">"REML"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>kappa not used for the spherical correlation function
+---------------------------------------------------------------
+likfit: likelihood maximisation using the function optim.
+likfit: Use control() to pass additional
+         arguments for the maximisation function.
+        For further details see documentation for optim.
+likfit: It is highly advisable to run this function several
+        times with different initial values for the parameters.
+likfit: WARNING: This step can be time demanding!
+---------------------------------------------------------------
+likfit: end of numerical maximisation.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>iso_fitsph </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>likfit: estimated model parameters:
+      beta      tausq    sigmasq        phi 
+"  0.8841" "  1.1243" "  0.0532" "464.5874" 
+Practical Range with cor=0.05 for asymptotic range: 464.5874
+
+likfit: maximised log-likelihood = -296.6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(iso_fitsph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of the parameter estimation
+-----------------------------------
+Estimation method: restricted maximum likelihood 
+
+Parameters of the mean component (trend):
+  beta 
+0.8841 
+
+Parameters of the spatial component:
+   correlation function: spherical
+      (estimated) variance parameter sigmasq (partial sill) =  0.0532
+      (estimated) cor. fct. parameter phi (range parameter)  =  464.6
+   anisotropy parameters:
+      (fixed) anisotropy angle = 0  ( 0 degrees )
+      (fixed) anisotropy ratio = 1
+
+Parameter of the error component:
+      (estimated) nugget =  1.124
+
+Transformation parameter:
+      (fixed) Box-Cox parameter = 1 (no transformation)
+
+Practical Range with cor=0.05 for asymptotic range: 464.5874
+
+Maximised Likelihood:
+   log.L n.params      AIC      BIC 
+"-296.6"      "4"  "601.2"  "614.4" 
+
+non spatial model:
+   log.L n.params      AIC      BIC 
+"-297.6"      "2"  "599.1"  "605.7" 
+
+Call:
+likfit(geodata = geocow, ini.cov.pars = c(1.5, 100), nugget = 0, 
+    cov.model = "spherical", lik.method = "REML")</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>model_list[[<span class="dv">1</span>]] <span class="ot">=</span> iso_fitsph</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">######################</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># anisotropic spherical</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>aniso_fitsph <span class="ot">=</span> <span class="fu">likfit</span>(geocow, <span class="at">ini.cov.pars =</span> <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="dv">100</span>),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">nugget =</span> <span class="dv">0</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">cov.model =</span> <span class="st">"spherical"</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">lik.method =</span> <span class="st">"REML"</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">psiA =</span> amin, <span class="at">psiR =</span> <span class="dv">2</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">fix.psiR =</span> <span class="cn">FALSE</span>,<span class="at">fix.psiA =</span> fix_angle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>kappa not used for the spherical correlation function
+---------------------------------------------------------------
+likfit: likelihood maximisation using the function optim.
+likfit: Use control() to pass additional
+         arguments for the maximisation function.
+        For further details see documentation for optim.
+likfit: It is highly advisable to run this function several
+        times with different initial values for the parameters.
+likfit: WARNING: This step can be time demanding!
+---------------------------------------------------------------
+likfit: end of numerical maximisation.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>aniso_fitsph</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>likfit: estimated model parameters:
+     beta     tausq   sigmasq       phi      psiA      psiR 
+" 0.9464" " 0.0000" " 1.1564" "10.3093" " 2.1278" "17.0609" 
+Practical Range with cor=0.05 for asymptotic range: 10.30935
+
+likfit: maximised log-likelihood = -285</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aniso_fitsph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of the parameter estimation
+-----------------------------------
+Estimation method: restricted maximum likelihood 
+
+Parameters of the mean component (trend):
+  beta 
+0.9464 
+
+Parameters of the spatial component:
+   correlation function: spherical
+      (estimated) variance parameter sigmasq (partial sill) =  1.156
+      (estimated) cor. fct. parameter phi (range parameter)  =  10.31
+   anisotropy parameters:
+      (estimated) anisotropy angle = 2.128  ( 122 degrees )
+      (estimated) anisotropy ratio = 17.06
+
+Parameter of the error component:
+      (estimated) nugget =  0
+
+Transformation parameter:
+      (fixed) Box-Cox parameter = 1 (no transformation)
+
+Practical Range with cor=0.05 for asymptotic range: 10.30935
+
+Maximised Likelihood:
+   log.L n.params      AIC      BIC 
+  "-285"      "6"  "582.1"  "601.9" 
+
+non spatial model:
+   log.L n.params      AIC      BIC 
+"-297.6"      "2"  "599.1"  "605.7" 
+
+Call:
+likfit(geodata = geocow, ini.cov.pars = c(1.5, 100), nugget = 0, 
+    fix.psiA = fix_angle, psiA = amin, fix.psiR = FALSE, psiR = 2, 
+    cov.model = "spherical", lik.method = "REML")</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>model_list[[<span class="dv">2</span>]] <span class="ot">=</span> aniso_fitsph</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">#########################</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># isotropic exponential</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>iso_fitexp <span class="ot">=</span> <span class="fu">likfit</span>(geocow,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ini.cov.pars =</span> <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="dv">100</span>),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nugget =</span> <span class="dv">0</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cov.model =</span> <span class="st">"exponential"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">lik.method =</span> <span class="st">"REML"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>kappa not used for the exponential correlation function
+---------------------------------------------------------------
+likfit: likelihood maximisation using the function optim.
+likfit: Use control() to pass additional
+         arguments for the maximisation function.
+        For further details see documentation for optim.
+likfit: It is highly advisable to run this function several
+        times with different initial values for the parameters.
+likfit: WARNING: This step can be time demanding!
+---------------------------------------------------------------
+likfit: end of numerical maximisation.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>iso_fitexp </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>likfit: estimated model parameters:
+      beta      tausq    sigmasq        phi 
+"  0.8625" "  1.1270" "  0.1497" "978.1169" 
+Practical Range with cor=0.05 for asymptotic range: 2930.176
+
+likfit: maximised log-likelihood = -296.6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(iso_fitexp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of the parameter estimation
+-----------------------------------
+Estimation method: restricted maximum likelihood 
+
+Parameters of the mean component (trend):
+  beta 
+0.8625 
+
+Parameters of the spatial component:
+   correlation function: exponential
+      (estimated) variance parameter sigmasq (partial sill) =  0.1497
+      (estimated) cor. fct. parameter phi (range parameter)  =  978.1
+   anisotropy parameters:
+      (fixed) anisotropy angle = 0  ( 0 degrees )
+      (fixed) anisotropy ratio = 1
+
+Parameter of the error component:
+      (estimated) nugget =  1.127
+
+Transformation parameter:
+      (fixed) Box-Cox parameter = 1 (no transformation)
+
+Practical Range with cor=0.05 for asymptotic range: 2930.176
+
+Maximised Likelihood:
+   log.L n.params      AIC      BIC 
+"-296.6"      "4"  "601.2"  "614.3" 
+
+non spatial model:
+   log.L n.params      AIC      BIC 
+"-297.6"      "2"  "599.1"  "605.7" 
+
+Call:
+likfit(geodata = geocow, ini.cov.pars = c(1.5, 100), nugget = 0, 
+    cov.model = "exponential", lik.method = "REML")</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model_list[[<span class="dv">3</span>]] <span class="ot">=</span> iso_fitexp</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="do">########################</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># anisotropic exponential</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>aniso_fitexp <span class="ot">=</span> <span class="fu">likfit</span>(geocow, <span class="at">ini.cov.pars =</span> <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="dv">100</span>),</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">nugget =</span> <span class="dv">0</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">cov.model =</span> <span class="st">"exponential"</span>,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">lik.method =</span> <span class="st">"REML"</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">psiA =</span> amin, <span class="at">psiR =</span> <span class="dv">2</span>,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">fix.psiR =</span> <span class="cn">FALSE</span>,<span class="at">fix.psiA =</span> fix_angle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>kappa not used for the exponential correlation function
+---------------------------------------------------------------
+likfit: likelihood maximisation using the function optim.
+likfit: Use control() to pass additional
+         arguments for the maximisation function.
+        For further details see documentation for optim.
+likfit: It is highly advisable to run this function several
+        times with different initial values for the parameters.
+likfit: WARNING: This step can be time demanding!
+---------------------------------------------------------------
+likfit: end of numerical maximisation.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>aniso_fitexp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>likfit: estimated model parameters:
+      beta      tausq    sigmasq        phi       psiA       psiR 
+"  0.9412" "  0.0252" "  1.1252" "  4.1627" "  0.6359" "657.5166" 
+Practical Range with cor=0.05 for asymptotic range: 12.47047
+
+likfit: maximised log-likelihood = -274.1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aniso_fitexp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of the parameter estimation
+-----------------------------------
+Estimation method: restricted maximum likelihood 
+
+Parameters of the mean component (trend):
+  beta 
+0.9412 
+
+Parameters of the spatial component:
+   correlation function: exponential
+      (estimated) variance parameter sigmasq (partial sill) =  1.125
+      (estimated) cor. fct. parameter phi (range parameter)  =  4.163
+   anisotropy parameters:
+      (estimated) anisotropy angle = 0.6359  ( 36 degrees )
+      (estimated) anisotropy ratio = 657.5
+
+Parameter of the error component:
+      (estimated) nugget =  0.0252
+
+Transformation parameter:
+      (fixed) Box-Cox parameter = 1 (no transformation)
+
+Practical Range with cor=0.05 for asymptotic range: 12.47047
+
+Maximised Likelihood:
+   log.L n.params      AIC      BIC 
+"-274.1"      "6"  "560.2"    "580" 
+
+non spatial model:
+   log.L n.params      AIC      BIC 
+"-297.6"      "2"  "599.1"  "605.7" 
+
+Call:
+likfit(geodata = geocow, ini.cov.pars = c(1.5, 100), nugget = 0, 
+    fix.psiA = fix_angle, psiA = amin, fix.psiR = FALSE, psiR = 2, 
+    cov.model = "exponential", lik.method = "REML")</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>model_list[[<span class="dv">4</span>]] <span class="ot">=</span> aniso_fitexp</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># model: model, partial sill ($c$), range parameter ($a$ or $a_{min}$), nugget ($c_0$), direction of the major axis in degrees, (if appropriate), anisotropy ratio $a_{max}/a_{min}$, AIC of the fit</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>i <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (m <span class="cf">in</span> model_list){</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (m<span class="sc">$</span>aniso.pars[[<span class="dv">2</span>]]<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    d <span class="ot">=</span> <span class="st">'iso'</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> { d <span class="ot">=</span> <span class="st">'aniso'</span>}</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  tl<span class="sc">$</span>model[i] <span class="ot">=</span> <span class="fu">paste</span>(d,m<span class="sc">$</span>cov.model)</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  tl<span class="sc">$</span>psill[i] <span class="ot">=</span> m<span class="sc">$</span>sigmasq</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  tl<span class="sc">$</span>range_param[i] <span class="ot">=</span> m<span class="sc">$</span>phi</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  tl<span class="sc">$</span>nugget[i] <span class="ot">=</span> m<span class="sc">$</span>nugget</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  tl<span class="sc">$</span>AIC[i] <span class="ot">=</span> m<span class="sc">$</span>AIC</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  ta <span class="ot">=</span> (m<span class="sc">$</span>aniso.pars[[<span class="dv">1</span>]]<span class="sc">*</span><span class="dv">180</span><span class="sc">/</span>pi)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (ta<span class="sc">&gt;</span><span class="dv">90</span>){</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>    tl<span class="sc">$</span>major[i] <span class="ot">=</span> ta<span class="dv">-90</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {tl<span class="sc">$</span>major[i] <span class="ot">=</span> ta<span class="sc">+</span><span class="dv">90</span>}</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  tl<span class="sc">$</span>ratio[i] <span class="ot">=</span> m<span class="sc">$</span>aniso.pars[[<span class="dv">2</span>]]</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">=</span> i<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(tl)</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              model      psill range_param     nugget      AIC     major
+1     iso spherical 0.05318107  464.587439 1.12433163 601.1633  90.00000
+2   aniso spherical 1.15638303   10.309347 0.00000000 582.0949  31.91328
+3   iso exponential 0.14968101  978.116940 1.12695673 601.1557  90.00000
+4 aniso exponential 1.12515909    4.162742 0.02524855 560.2373 126.43658
+      ratio
+1   1.00000
+2  17.06092
+3   1.00000
+4 657.51660</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The anisotropic exponential model has the lowest AIC score, indicating the best fit of the 4 models.</p>
+</blockquote>
+</section>
+<section id="problem-2" class="level1">
+<h1>Problem 2</h1>
+<p>Create two <code>gstat</code> objects with a constant mean and the directional semivariogram model that matches the REML fit provided below. For the first, assume the nugget is microscale error (standard kriging) while the second is measurement error (filtered kriging).</p>
+<p>Reminder: <strong>gstat</strong> and <strong>geoR</strong> parameterize the angle and ratio of the <span class="math inline">\(a_{minor}\)</span> and <span class="math inline">\(a_{major}\)</span> differently, so carefully read the documentation.</p>
+<pre><code>Summary of the parameter estimation
+-----------------------------------
+Estimation method: restricted maximum likelihood 
+
+Parameters of the mean component (trend):
+  beta 
+0.9343 
+
+Parameters of the spatial component:
+   correlation function: exponential
+      (estimated) variance parameter sigmasq (partial sill) =  1.158
+      (estimated) cor. fct. parameter phi (range parameter)  =  3.276
+   anisotropy parameters:
+      (fixed) anisotropy angle = 0.7854  ( 45.0001052295748 degrees )
+      (fixed) anisotropy ratio = 2
+
+Parameter of the error component:
+      (estimated) nugget =  0.102
+
+Transformation parameter:
+      (fixed) Box-Cox parameter = 1 (no transformation)
+
+Practical Range with cor=0.05 for asymptotic range: 9.812505
+
+Maximised Likelihood:
+   log.L n.params      AIC      BIC 
+"-296.1"      "4"  "600.1"  "613.3" 
+
+non spatial model:
+   log.L n.params      AIC      BIC 
+"-297.6"      "2"  "599.1"  "605.7" 
+
+Call:
+likfit(geodata = geocow, ini.cov.pars = c(0.5, 10), fix.nugget = FALSE, 
+    nugget = 0.1, fix.psiA = TRUE, psiA = pi/4, fix.psiR = TRUE, 
+    psiR = 2, cov.model = "exponential", lik.method = "REML", 
+    messages = FALSE)</code></pre>
+<p><strong>Solution</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gstat)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to GEOS 3.11.2, GDAL 3.6.2, PROJ 9.2.0; sf_use_s2() is TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cow_sf[<span class="st">"W"</span>], <span class="at">nbreaks =</span> <span class="dv">10</span>, <span class="at">pal =</span> hcl.colors, <span class="at">pch =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="geo-hw-pred-v2_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># standard kriging</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">=</span> <span class="fu">vgm</span>(<span class="at">psill=</span><span class="fl">0.5</span>, <span class="st">"Exp"</span>, <span class="at">range=</span><span class="dv">10</span>, <span class="at">nugget =</span> <span class="fl">0.1</span>, <span class="at">anis =</span> <span class="fu">c</span>(<span class="dv">45</span>, .<span class="dv">5</span>))</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># filtered kriging</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>v2 <span class="ot">=</span> <span class="fu">vgm</span>(<span class="at">psill=</span><span class="fl">0.5</span>, <span class="st">"Exp"</span>, <span class="at">range=</span><span class="dv">10</span>, <span class="at">Err =</span> <span class="fl">0.1</span>, <span class="at">anis =</span> <span class="fu">c</span>(<span class="dv">45</span>, .<span class="dv">5</span>))</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="co"># gstat objects with anisotropic variogram models for kriging</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>v_standard <span class="ot">=</span> <span class="fu">gstat</span>(<span class="at">id =</span> <span class="st">"W"</span>, <span class="at">formula =</span> W <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> cow_sf,</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> v1)</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>v_filtered <span class="ot">=</span> <span class="fu">gstat</span>(<span class="at">id =</span> <span class="st">"W"</span>, <span class="at">formula =</span> W <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> cow_sf,</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> v2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="problem-3" class="level1">
+<h1>Problem 3</h1>
+<p>Perform standard kriging at the locations contained in <code>grid_sf</code> using the <code>gstat</code> object created in the previous problem.</p>
+<p>Use the <code>summary</code> function to summarize your results.</p>
+<p><strong>Solution</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ordinary kriging</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>ok <span class="ot">=</span> <span class="fu">predict</span>(v_standard, <span class="at">newdata =</span> grid_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[using ordinary kriging]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ok)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     W.pred           W.var           geometry  
+ Min.   :0.7501   Min.   :0.3450   POINT  :108  
+ 1st Qu.:0.9043   1st Qu.:0.5892   epsg:NA:  0  
+ Median :0.9171   Median :0.6002                
+ Mean   :0.9200   Mean   :0.5848                
+ 3rd Qu.:0.9277   3rd Qu.:0.6028                
+ Max.   :1.7314   Max.   :0.6034                </code></pre>
+</div>
+</div>
+</section>
+<section id="problem-4" class="level1">
+<h1>Problem 4</h1>
+<p>Perform filtered kriging at the locations contained in <code>grid_sf</code> using the <code>gstat</code> object created in Problem 2.</p>
+<p>Use the <code>summary</code> function to summarize your results.</p>
+<p><strong>Solution</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filtered ordinary kriging</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>fok <span class="ot">=</span> <span class="fu">predict</span>(v_filtered, <span class="at">newdata =</span> grid_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[using ordinary kriging]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fok)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     W.pred           W.var           geometry  
+ Min.   :0.7501   Min.   :0.2450   POINT  :108  
+ 1st Qu.:0.9043   1st Qu.:0.4892   epsg:NA:  0  
+ Median :0.9171   Median :0.5002                
+ Mean   :0.9200   Mean   :0.4848                
+ 3rd Qu.:0.9277   3rd Qu.:0.5028                
+ Max.   :1.7314   Max.   :0.5034                </code></pre>
+</div>
+</div>
+</section>
+<section id="problem-5" class="level1">
+<h1>Problem 5</h1>
+<p>Are the predictions for standard and filtered kriging identical for the predictions above? Why?</p>
+<p><strong>Solution</strong> &gt; Yes, the predictions are the same for standard and filtered kriging because the kriging is predicting values on a stationary omnidirectional grid of points.</p>
+</section>
+<section id="problem-6" class="level1">
+<h1>Problem 6</h1>
+<p>Create side-by-side plots of the kriging variances from Problems 3 and 4 with a common color scale. Which variances are higher?</p>
+<p><strong>Solution</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot kriging variance from ok model</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ok) <span class="sc">+</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">col =</span> W.var)) <span class="sc">+</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,<span class="at">limits =</span> <span class="fu">range</span>(.<span class="dv">25</span>,.<span class="dv">8</span>))<span class="sc">+</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Ordinary Kriging"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="geo-hw-pred-v2_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot kriging variance from fok model</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fok) <span class="sc">+</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">col =</span> W.var)) <span class="sc">+</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,<span class="at">limits =</span> <span class="fu">range</span>(.<span class="dv">25</span>, .<span class="dv">8</span>))<span class="sc">+</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Filtered Kriging"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="geo-hw-pred-v2_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Ordinary Kriging has higher variances</p>
+</blockquote>
+</section>
+<section id="problem-7" class="level1">
+<h1>Problem 7</h1>
+<p>Perform standard kriging at the locations contained in <code>cow_sf</code> using the <code>gstat</code> object created in Problem 2.</p>
+<p>Use the <code>summary</code> function to summarize your results.</p>
+<p><strong>Solution</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ordinary kriging</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>ok_cow <span class="ot">=</span> <span class="fu">predict</span>(v_standard, <span class="at">newdata =</span> cow_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[using ordinary kriging]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ok_cow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     W.pred           W.var               geometry  
+ Min.   : 0.200   Min.   :-6.661e-16   POINT  :200  
+ 1st Qu.: 0.600   1st Qu.:-1.110e-16   epsg:NA:  0  
+ Median : 0.800   Median : 0.000e+00                
+ Mean   : 0.947   Mean   :-3.886e-18                
+ 3rd Qu.: 1.000   3rd Qu.: 1.110e-16                
+ Max.   :14.000   Max.   : 4.441e-16                </code></pre>
+</div>
+</div>
+</section>
+<section id="problem-8" class="level1">
+<h1>Problem 8</h1>
+<p>Perform filtered kriging at the locations contained in <code>cow_sf</code> using the <code>gstat</code> object created in Problem 2.</p>
+<p>Use the <code>summary</code> function to summarize your results.</p>
+<p><strong>Solution</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filtered ordinary kriging</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>fok_cow <span class="ot">=</span> <span class="fu">predict</span>(v_filtered, <span class="at">newdata =</span> cow_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[using ordinary kriging]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fok_cow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     W.pred            W.var            geometry  
+ Min.   : 0.3122   Min.   :0.07441   POINT  :200  
+ 1st Qu.: 0.6540   1st Qu.:0.08290   epsg:NA:  0  
+ Median : 0.8195   Median :0.08334                
+ Mean   : 0.9470   Mean   :0.08285                
+ 3rd Qu.: 0.9865   3rd Qu.:0.08342                
+ Max.   :11.7667   Max.   :0.08343                </code></pre>
+</div>
+</div>
+</section>
+<section id="problem-9" class="level1">
+<h1>Problem 9</h1>
+<p>Are the standard and unfiltered kriging predictions the same at the observed data locations? Why?</p>
+<p><strong>Solution</strong> &gt; The predictions are not the same because this time we are predicting values for anisotropic point data.</p>
+</section>
+<section id="problem-10" class="level1">
+<h1>Problem 10</h1>
+<p>What do you notice about the kriging variances for the filtered and unfilted kriging predictions at observed data locations?</p>
+<p><strong>Solution</strong> &gt; The variances for the ordinary kriging are basically 0 and the variances for the filtered kriging predictions are essentially constant at 0.08.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
